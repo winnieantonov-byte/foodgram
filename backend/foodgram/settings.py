@@ -1,16 +1,17 @@
 import os
 import sys
 from pathlib import Path
+from django.core.management.utils import get_random_secret_key
 
 # Базовая директория проекта (backend/)
 BASE_DIR = Path(__file__).resolve().parent.parent
 sys.path.insert(0, os.path.join(BASE_DIR, 'apps'))
 # В продакшене это будет браться из .env (DRY / Twelve-Factor App)
-SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-local-development-key-10-years-exp')
+SECRET_KEY = os.getenv('SECRET_KEY', default=get_random_secret_key())
 
-DEBUG = os.getenv('DEBUG', 'True') == 'True'
+DEBUG = os.getenv('DEBUG', 'False').lower() in ('true', '1', 't')
 
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '127.0.0.1 localhost').split()
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '127.0.0.1,localhost').split(',')
 
 # Конфигурация приложений
 SYSTEM_APPS = [
@@ -104,9 +105,11 @@ USE_TZ = True
 
 # Статика и медиа
 STATIC_URL = 'static/'
-STATIC_ROOT = BASE_DIR / 'static'
+
+STATIC_ROOT = BASE_DIR / 'static' / 'static'
 
 MEDIA_URL = 'media/'
+
 MEDIA_ROOT = BASE_DIR / 'media'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
