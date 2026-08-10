@@ -15,6 +15,7 @@ TEST_BASE64_IMAGE = (
     'CAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='
 )
 
+
 @pytest.mark.django_db
 class TestRecipesAPI:
     """Интеграционные тесты для API рецептов, тегов и ингредиентов."""
@@ -104,7 +105,6 @@ class TestRecipesAPI:
         )
         assert response.status_code == status.HTTP_201_CREATED
         assert Recipe.objects.filter(name='Новое блюдо').exists()
-
 
     def test_add_to_favorite_success(self):
         """Авторизованный пользователь может добавить рецепт в избранное."""
