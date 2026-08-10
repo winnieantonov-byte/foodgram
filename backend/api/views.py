@@ -20,7 +20,9 @@ from api.serializers import (
     SubscriptionSerializer,
     TagSerializer,
 )
-from apps.recipes.models import Favorite, Ingredient, Recipe, RecipeIngredient, ShoppingCart, Tag
+from apps.recipes.models import (
+    Favorite, Ingredient, Recipe, RecipeIngredient, ShoppingCart, Tag
+)
 from apps.users.models import Subscription
 
 User = get_user_model()
@@ -31,7 +33,7 @@ User = get_user_model()
 # =====================================================================
 
 class CustomUserViewSet(UserViewSet):
-    """Кастомный вьюсет пользователей, расширяющий Djoser системой подписок."""
+    """Кастомный вьюсет пользователей, расширяющий Djoser подписками."""
 
     @action(
         detail=False,
@@ -39,14 +41,18 @@ class CustomUserViewSet(UserViewSet):
         serializer_class=SubscriptionSerializer
     )
     def subscriptions(self, request: Request) -> Response:
-        """Получить список авторов, на которых подписан текущий пользователь."""
+        """Получить список авторов, на которых подписан пользователь."""
         queryset = User.objects.filter(following__user=request.user)
         page = self.paginate_queryset(queryset)
         if page is not None:
-            serializer = self.get_serializer(page, many=True)
+            serializer = self.get_serializer(
+                page, many=True, context={'request': request}
+            )
             return self.get_paginated_response(serializer.data)
-            
-        serializer = self.get_serializer(queryset, many=True)
+
+        serializer = self.get_serializer(
+            queryset, many=True, context={'request': request}
+        )
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     @action(
@@ -70,19 +76,23 @@ class CustomUserViewSet(UserViewSet):
                     {'errors': 'Вы уже подписаны на этого автора.'},
                     status=status.HTTP_400_BAD_REQUEST
                 )
-                
+
             Subscription.objects.create(user=user, author=author)
-            serializer = SubscriptionSerializer(author, context={'request': request})
+            serializer = SubscriptionSerializer(
+                author, context={'request': request}
+            )
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         if request.method == 'DELETE':
-            subscription = Subscription.objects.filter(user=user, author=author)
+            subscription = Subscription.objects.filter(
+                user=user, author=author
+            )
             if not subscription.exists():
                 return Response(
                     {'errors': 'Вы не подписаны на этого автора.'},
                     status=status.HTTP_400_BAD_REQUEST
                 )
-                
+
             subscription.delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
 
@@ -101,7 +111,7 @@ class TagViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class IngredientViewSet(viewsets.ReadOnlyModelViewSet):
-    """Вьюсет для просмотра ингредиентов с фильтрацией по имени."""
+    """Вьюсет для просмотра ингредиентов с фильтрацией."""
 
     queryset = Ingredient.objects.all()
     serializer_class = IngredientSerializer
@@ -112,7 +122,7 @@ class IngredientViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class RecipeViewSet(viewsets.ModelViewSet):
-    """Центральный вьюсет рецептов (CRUD, Избранное, Корзина, Скачивание TXT)."""
+    """Центральный вьюсет рецептов (CRUD, Избранное, Корзина)."""
 
     queryset = Recipe.objects.all()
     permission_classes = [IsAuthorOrReadOnly]
@@ -124,8 +134,10 @@ class RecipeViewSet(viewsets.ModelViewSet):
             return RecipeReadSerializer
         return RecipeWriteSerializer
 
-    def _manage_relation(self, request: Request, model, pk: int = None) -> Response:
-        """Внутренний DRY-метод для связи рецептов с Избранным и Корзиной."""
+    def _manage_relation(
+        self, request: Request, model, pk: int = None
+    ) -> Response:
+        """Внутренний DRY-метод для связи рецептов со списками."""
         recipe = get_object_or_404(Recipe, id=pk)
         user = request.user
 
@@ -136,7 +148,9 @@ class RecipeViewSet(viewsets.ModelViewSet):
                     status=status.HTTP_400_BAD_REQUEST
                 )
             model.objects.create(user=user, recipe=recipe)
-            serializer = CompactRecipeSerializer(recipe, context={'request': request})
+            serializer = CompactRecipeSerializer(
+                recipe, context={'request': request}
+            )
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         if request.method == 'DELETE':
@@ -149,19 +163,31 @@ class RecipeViewSet(viewsets.ModelViewSet):
             relation.delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
 
-    @action(detail=True, methods=['post', 'delete'], permission_classes=[IsAuthenticated])
+    @action(
+        detail=True,
+        methods=['post', 'delete'],
+        permission_classes=[IsAuthenticated]
+    )
     def favorite(self, request: Request, pk: int = None) -> Response:
         """Добавить или удалить рецепт из Избранного."""
         return self._manage_relation(request, Favorite, pk)
 
-    @action(detail=True, methods=['post', 'delete'], permission_classes=[IsAuthenticated])
+    @action(
+        detail=True,
+        methods=['post', 'delete'],
+        permission_classes=[IsAuthenticated]
+    )
     def shopping_cart(self, request: Request, pk: int = None) -> Response:
         """Добавить или удалить рецепт из Списка покупок."""
         return self._manage_relation(request, ShoppingCart, pk)
 
-    @action(detail=False, methods=['get'], permission_classes=[IsAuthenticated])
+    @action(
+        detail=False,
+        methods=['get'],
+        permission_classes=[IsAuthenticated]
+    )
     def download_shopping_cart(self, request: Request) -> HttpResponse:
-        """Агрегационный сервис: подсчет ингредиентов и отгрузка TXT-файла."""
+        """Агрегационный сервис: подсчет ингредиентов и отгрузка TXT."""
         user = request.user
         if not user.shopping_cart.exists():
             return Response(
@@ -169,7 +195,6 @@ class RecipeViewSet(viewsets.ModelViewSet):
                 status=status.HTTP_400_BAD_REQUEST
             )
 
-        # SQL-агрегация через Django ORM (DRY): суммируем количество повторяющихся ингредиентов
         ingredients = (
             RecipeIngredient.objects.filter(recipe__shopping_cart__user=user)
             .values('ingredient__name', 'ingredient__measurement_unit')
@@ -177,8 +202,10 @@ class RecipeViewSet(viewsets.ModelViewSet):
             .order_by('ingredient__name')
         )
 
-        # Формируем структуру текстового файла
-        file_lines = ['Список покупок Foodgram\n', f'Для пользователя: {user.get_full_name() or user.username}\n\n']
+        file_lines = [
+            'Список покупок Foodgram\n',
+            f'Для: {user.get_full_name() or user.username}\n\n'
+        ]
         for ing in ingredients:
             name = ing['ingredient__name']
             unit = ing['ingredient__measurement_unit']
@@ -186,8 +213,11 @@ class RecipeViewSet(viewsets.ModelViewSet):
             file_lines.append(f'• {name} — {amount} {unit}\n')
 
         file_content = ''.join(file_lines)
-        
-        # Отдаем HTTP-ответ в виде файла для скачивания фронтендом
-        response = HttpResponse(file_content, content_type='text/plain; charset=utf-8')
-        response['Content-Disposition'] = 'attachment; filename="shopping_cart.txt"'
+
+        response = HttpResponse(
+            file_content, content_type='text/plain; charset=utf-8'
+        )
+        response['Content-Disposition'] = (
+            'attachment; filename="shopping_cart.txt"'
+        )
         return response

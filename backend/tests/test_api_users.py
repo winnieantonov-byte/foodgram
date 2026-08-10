@@ -1,6 +1,7 @@
 import pytest
 from django.contrib.auth import get_user_model
 from rest_framework import status
+from rest_framework.authtoken.models import Token
 from rest_framework.test import APIClient
 
 from apps.users.models import Subscription
@@ -28,13 +29,15 @@ class TestUserAndAuthAPI:
             'last_name': 'Петров',
             'password': 'very_secret_pass_123'
         }
-        response = self.client.post(self.register_url, data=payload, format='json')
+        response = self.client.post(
+            self.register_url, data=payload, format='json'
+        )
 
         assert response.status_code == status.HTTP_201_CREATED
         assert response.data['username'] == payload['username']
         assert response.data['email'] == payload['email']
         assert 'id' in response.data
-        assert 'password' not in response.data  # Пароль не должен возвращаться
+        assert 'password' not in response.data
 
     def test_anonymous_user_me_endpoint_returns_401(self):
         """Неавторизованный пользователь не имеет доступа к /me/."""
@@ -50,17 +53,20 @@ class TestSubscriptionsAPI:
     def setup_data(self):
         self.client_user = APIClient()
         self.user = User.objects.create_user(
-            username='follower_user', email='follower@test.com', password='password123'
+            username='follower_user',
+            email='follower@test.com',
+            password='password123'
         )
         self.author = User.objects.create_user(
-            username='star_chef', email='chef@test.com', password='password123'
+            username='star_chef',
+            email='chef@test.com',
+            password='password123'
         )
 
-        # Симулируем авторизацию (Token Auth по ТЗ)
-        # Для Djoser токен обычно создается через эндпоинт, мы заложим контракт
-        from rest_framework.authtoken.models import Token
         self.token = Token.objects.create(user=self.user)
-        self.client_user.credentials(HTTP_AUTHORIZATION=f'Token {self.token.key}')
+        self.client_user.credentials(
+            HTTP_AUTHORIZATION=f'Token {self.token.key}'
+        )
 
     def test_subscribe_to_author_success(self):
         """Авторизованный пользователь может подписаться на автора."""
@@ -68,8 +74,9 @@ class TestSubscriptionsAPI:
         response = self.client_user.post(url)
 
         assert response.status_code == status.HTTP_201_CREATED
-        assert Subscription.objects.filter(user=self.user, author=self.author).exists()
-        # Проверяем, что вернулся контрактный объект автора со списком его рецептов
+        assert Subscription.objects.filter(
+            user=self.user, author=self.author
+        ).exists()
         assert response.data['email'] == self.author.email
         assert 'recipes' in response.data
 
@@ -95,15 +102,23 @@ class TestSubscriptionsAPI:
 
         response = self.client_user.delete(url)
         assert response.status_code == status.HTTP_204_NO_CONTENT
-        assert not Subscription.objects.filter(user=self.user, author=self.author).exists()
+        assert not Subscription.objects.filter(
+            user=self.user, author=self.author
+        ).exists()
 
     def test_subscriptions_list_endpoint(self):
-        """Проверка эндпоинта 'Мои подписки'."""
+        """Проверка эндпоинта 'Мои подписки' с учетом пагинации."""
         Subscription.objects.create(user=self.user, author=self.author)
         url = '/api/users/subscriptions/'
 
         response = self.client_user.get(url)
         assert response.status_code == status.HTTP_200_OK
-        assert 'results' in response.data  # Проверка обязательного наличия пагинатора
+
+        # Проверяем структуру пагинированного ответа (results)
+        assert 'results' in response.data
         assert len(response.data['results']) == 1
-        assert response.data['results'][0]['id'] == self.author.id
+
+        # Извлекаем автора из списка результатов для проверки контракта
+        author_data = response.data['results'][0]
+        assert author_data['id'] == self.author.id
+        assert author_data['username'] == self.author.username

@@ -1,10 +1,12 @@
+from datetime import timedelta
 import pytest
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.db.utils import IntegrityError
+from django.utils import timezone
 
 from apps.recipes.models import (
-    Tag, Ingredient, Recipe, RecipeIngredient, Favorite, ShoppingCart
+    Favorite, Ingredient, Recipe, RecipeIngredient, ShoppingCart, Tag
 )
 
 User = get_user_model()
@@ -20,8 +22,12 @@ class TestRecipesCoreModels:
         author = User.objects.create_user(
             username='chef_test', email='chef_test@foodgram.com'
         )
-        tag = Tag.objects.create(name='Завтрак', color='#E26C2D', slug='breakfast')
-        ingredient = Ingredient.objects.create(name='Сахар', measurement_unit='г')
+        tag = Tag.objects.create(
+            name='Завтрак', color='#E26C2D', slug='breakfast'
+        )
+        ingredient = Ingredient.objects.create(
+            name='Сахар', measurement_unit='г'
+        )
         return author, tag, ingredient
 
     def test_tag_creation(self):
@@ -37,24 +43,21 @@ class TestRecipesCoreModels:
 
     def test_recipe_creation_and_ordering(self, setup_data):
         """Проверка создания рецепта и сортировки (новые выше)."""
-        from django.utils import timezone
-        from datetime import timedelta
-
         author, tag, ingredient = setup_data
 
-        # Создаем первый (старый) рецепт
+        # Создаем первый рецепт
         recipe1 = Recipe.objects.create(
             author=author,
             name='Яичница',
             text='Простой рецепт яичницы',
             cooking_time=5
         )
-        # Искусственно сдвигаем его дату публикации в прошлое на 1 час
+        # Искусственно сдвигаем дату публикации первого рецепта в прошлое
         Recipe.objects.filter(id=recipe1.id).update(
             pub_date=timezone.now() - timedelta(hours=1)
         )
 
-        # Создаем второй (новый) рецепт
+        # Создаем второй рецепт (он будет считаться более новым)
         recipe2 = Recipe.objects.create(
             author=author,
             name='Блины',
@@ -62,7 +65,8 @@ class TestRecipesCoreModels:
             cooking_time=15
         )
 
-        # Проверяем Meta-сортировку: Блины созданы позже (сейчас), они должны быть выше в списке
+        # Проверяем Meta-сортировку:
+        # Блины созданы позже, они должны быть первыми
         recipes = list(Recipe.objects.all())
         assert recipes[0] == recipe2
         assert recipes[1] == recipe1
@@ -72,7 +76,6 @@ class TestRecipesCoreModels:
         """Бизнес-логика: время приготовления не может быть меньше 1."""
         author, _, _ = setup_data
 
-        # Тест ожидает ошибку на уровне БД или валидации модели
         recipe = Recipe(
             author=author,
             name='Странное блюдо',
@@ -86,13 +89,19 @@ class TestRecipesCoreModels:
 
 @pytest.mark.django_db
 class TestRecipeIngredientsAndConstraints:
-    """Тестирование промежуточных связей и ограничений целостности данных (DRY)."""
+    """Тестирование промежуточных связей и ограничений целостности данных."""
 
     def test_recipe_ingredient_min_amount(self):
         """Бизнес-логика: количество ингредиента не может быть меньше 1."""
-        author = User.objects.create_user(username='chef_2', email='c2@test.com')
-        recipe = Recipe.objects.create(author=author, name='Суп', text='Код', cooking_time=10)
-        ingredient = Ingredient.objects.create(name='Соль', measurement_unit='г')
+        author = User.objects.create_user(
+            username='chef_2', email='c2@test.com'
+        )
+        recipe = Recipe.objects.create(
+            author=author, name='Суп', text='Код', cooking_time=10
+        )
+        ingredient = Ingredient.objects.create(
+            name='Соль', measurement_unit='г'
+        )
 
         recipe_ing = RecipeIngredient(
             recipe=recipe,
@@ -105,15 +114,25 @@ class TestRecipeIngredientsAndConstraints:
 
     def test_unique_ingredient_in_recipe_constraint(self):
         """DRY: Нельзя добавить один и тот же ингредиент в рецепт дважды."""
-        author = User.objects.create_user(username='chef_3', email='c3@test.com')
-        recipe = Recipe.objects.create(author=author, name='Каша', text='Код', cooking_time=10)
-        ingredient = Ingredient.objects.create(name='Вода', measurement_unit='л')
+        author = User.objects.create_user(
+            username='chef_3', email='c3@test.com'
+        )
+        recipe = Recipe.objects.create(
+            author=author, name='Каша', text='Код', cooking_time=10
+        )
+        ingredient = Ingredient.objects.create(
+            name='Вода', measurement_unit='л'
+        )
 
-        RecipeIngredient.objects.create(recipe=recipe, ingredient=ingredient, amount=2)
+        RecipeIngredient.objects.create(
+            recipe=recipe, ingredient=ingredient, amount=2
+        )
 
-        # Повторное добавление должно упасть на уровне IntegrityError базы данных
+        # Повторное добавление падает на уровне IntegrityError базы данных
         with pytest.raises(IntegrityError):
-            RecipeIngredient.objects.create(recipe=recipe, ingredient=ingredient, amount=1)
+            RecipeIngredient.objects.create(
+                recipe=recipe, ingredient=ingredient, amount=1
+            )
 
 
 @pytest.mark.django_db
@@ -122,9 +141,15 @@ class TestUserListsModels:
 
     @pytest.fixture
     def setup_recipe(self):
-        user = User.objects.create_user(username='user_list', email='ul@test.com')
-        author = User.objects.create_user(username='chef_list', email='cl@test.com')
-        recipe = Recipe.objects.create(author=author, name='Салат', text='Код', cooking_time=5)
+        user = User.objects.create_user(
+            username='user_list', email='ul@test.com'
+        )
+        author = User.objects.create_user(
+            username='chef_list', email='cl@test.com'
+        )
+        recipe = Recipe.objects.create(
+            author=author, name='Салат', text='Код', cooking_time=5
+        )
         return user, recipe
 
     def test_favorite_uniqueness(self, setup_recipe):

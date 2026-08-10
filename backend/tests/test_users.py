@@ -9,61 +9,65 @@ User = get_user_model()
 
 @pytest.mark.django_db
 class TestUserModel:
-    """Тестирование кастомной модели пользователя на соответствие PEP8 и DRY."""
+    """Тестирование кастомной модели пользователя."""
 
     def test_create_user(self):
-        """Проверка успешного создания пользователя с валидными данными."""
+        """Проверка успешного создания пользователя и метода __str__."""
         user = User.objects.create_user(
-            username='chef_ivan',
-            email='ivan@foodgram.com',
-            first_name='Иван',
+            username='test_chef',
+            email='chef@foodgram.com',
+            first_name='Алексей',
             last_name='Иванов',
-            password='secure_password123'
+            password='securepassword123'
         )
-        assert user.username == 'chef_ivan'
-        assert user.email == 'ivan@foodgram.com'
-        assert user.get_full_name() == 'Иван Иванов'
-        assert str(user) == 'chef_ivan'
+        assert User.objects.count() == 1
+        assert str(user) == 'test_chef'
+        assert user.email == 'chef@foodgram.com'
+        assert user.get_full_name() == 'Алексей Иванов'
 
 
 @pytest.mark.django_db
 class TestSubscriptionModel:
-    """Тестирование бизнес-логики подписок."""
+    """Тестирование модели подписок на авторов (Follow System)."""
 
     @pytest.fixture
     def setup_users(self):
-        """Создание тестовых пользователей."""
+        """Фикстура для создания двух разных пользователей."""
         follower = User.objects.create_user(
-            username='user_buyer', email='buyer@test.com'
+            username='follower',
+            email='follower@test.com',
+            password='password123'
         )
         author = User.objects.create_user(
-            username='chef_pro', email='chef@test.com'
+            username='author',
+            email='author@test.com',
+            password='password123'
         )
         return follower, author
 
     def test_subscription_creation(self, setup_users):
-        """Проверка создания связи подписки."""
+        """Проверка корректности создания связи подписки."""
         follower, author = setup_users
         subscription = Subscription.objects.create(
-            user=follower, author=author
+            user=follower,
+            author=author
         )
-        
-        assert subscription.user == follower
-        assert subscription.author == author
-        assert str(subscription) == f'{follower} подписан на {author}'
+        assert Subscription.objects.count() == 1
+        assert str(subscription) == 'follower подписан на author'
 
     def test_unique_subscription_constraint(self, setup_users):
-        """DRY/Integrity: Нельзя подписаться на одного автора дважды."""
+        """Бизнес-логика: нельзя дважды подписаться на одного автора."""
         follower, author = setup_users
         Subscription.objects.create(user=follower, author=author)
-        
+
+        # Повторная попытка должна упасть на уровне СУБД (UniqueConstraint)
         with pytest.raises(IntegrityError):
             Subscription.objects.create(user=follower, author=author)
 
     def test_self_subscription_constraint(self, setup_users):
-        """Бизнес-логика: Пользователь не может подписаться на самого себя."""
+        """Бизнес-логика: пользователь не может подписаться сам на себя."""
         follower, _ = setup_users
-        
-        # Этот тест упадет на этапе написания кода, если мы не добавим CheckConstraint
+
+        # Попытка самоподписки падает из-за CheckConstraint базы данных
         with pytest.raises(IntegrityError):
             Subscription.objects.create(user=follower, author=follower)
