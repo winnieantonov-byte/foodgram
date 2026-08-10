@@ -14,7 +14,9 @@ class Command(BaseCommand):
     def handle(self, *args, **options) -> None:
         file_path = os.path.join(settings.BASE_DIR, 'data', 'ingredients.json')
         if not os.path.exists(file_path):
-            self.stdout.write(self.style.ERROR(f'Файл не найден по пути: {file_path}'))
+            self.stdout.write(
+                self.style.ERROR(f'Файл не найден по пути: {file_path}')
+            )
             return
 
         self.stdout.write('Начало импорта ингредиентов...')
@@ -31,5 +33,11 @@ class Command(BaseCommand):
                 )
             )
 
-        Ingredient.objects.bulk_create(ingredients_to_create, ignore_conflicts=True)
-        self.stdout.write(self.style.SUCCESS(f'Успешно импортировано {len(data)} ингредиентов.'))
+        Ingredient.objects.bulk_create(
+            ingredients_to_create, ignore_conflicts=True
+        )
+        self.stdout.write(
+            self.style.SUCCESS(
+                f'Успешно импортировано {len(data)} ингредиентов.'
+            )
+        )

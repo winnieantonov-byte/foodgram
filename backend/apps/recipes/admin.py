@@ -2,11 +2,15 @@ from django.contrib import admin
 from django.db.models import Count, QuerySet
 from django.http import HttpRequest
 
-from apps.recipes.models import Favorite, Ingredient, Recipe, RecipeIngredient, ShoppingCart, Tag
+from apps.recipes.models import (
+    Favorite, Ingredient, Recipe, RecipeIngredient, ShoppingCart, Tag
+)
 
 
 class RecipeIngredientInline(admin.TabularInline):
-    """Инлайн-интерфейс для удобного управления ингредиентами прямо внутри рецепта."""
+    """
+    Интерфейс для удобного управления ингредиентами прямо внутри рецепта.
+    """
 
     model = RecipeIngredient
     min_num = 1
@@ -17,7 +21,8 @@ class RecipeIngredientInline(admin.TabularInline):
 class RecipeAdmin(admin.ModelAdmin):
     """Настройка панели администратора для рецептов."""
 
-    # Выводим название, автора и кастомное вычисляемое поле количества в избранном
+    # Выводим название автора и
+    # кастомное вычисляемое поле количества в избранном
     list_display = ('id', 'name', 'author', 'get_favorites_count', 'pub_date')
     # Требование ТЗ: поиск по названию и по автору
     search_fields = ('name', 'author__username', 'author__email')
@@ -27,7 +32,9 @@ class RecipeAdmin(admin.ModelAdmin):
     ordering = ('-pub_date',)
 
     def get_queryset(self, request: HttpRequest) -> QuerySet:
-        """Оптимизация: аннотируем queryset количеством добавлений в избранное одним запросом."""
+        """Оптимизация:
+        аннотируем queryset количеством добавлений в избранное одним запросом.
+        """
         queryset = super().get_queryset(request)
         return queryset.annotate(favorites_count_annotated=Count('favorites'))
 

@@ -10,6 +10,10 @@ from apps.recipes.models import (
 
 User = get_user_model()
 
+TEST_BASE64_IMAGE = (
+    'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAB'
+    'CAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='
+)
 
 @pytest.mark.django_db
 class TestRecipesAPI:
@@ -84,15 +88,14 @@ class TestRecipesAPI:
         assert response.data['results'][0]['name'] == 'Сладкий чай'
 
     def test_create_recipe_authenticated(self):
-        """Авторизованный пользователь может успешно опубликовать свой рецепт."""
+        """
+        Авторизованный пользователь может успешно опубликовать свой рецепт.
+        """
         payload = {
             'ingredients': [{'id': self.ing_sugar.id, 'amount': 15}],
             'tags': [self.tag_breakfast.id],
             'name': 'Новое блюдо',
-            'image': (
-                'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAB'+
-                'CAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='
-            ),
+            'image': TEST_BASE64_IMAGE,
             'text': 'Описание нового блюда',
             'cooking_time': 10
         }

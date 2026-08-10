@@ -100,7 +100,9 @@ class Recipe(models.Model):
     cooking_time = models.PositiveSmallIntegerField(
         'Время приготовления (в минутах)',
         validators=[
-            MinValueValidator(1, message='Время приготовления не может быть меньше 1 минуты.')
+            MinValueValidator(
+                1, message='Время приготовления не может быть меньше 1 минуты.'
+            )
         ]
     )
     pub_date = models.DateTimeField(
@@ -119,7 +121,9 @@ class Recipe(models.Model):
 
 
 class RecipeIngredient(models.Model):
-    """Промежуточная таблица, связывающая Рецепт и Ингредиент (с количеством)."""
+    """
+    Промежуточная таблица, связывающая Рецепт и Ингредиент (с количеством).
+    """
 
     recipe = models.ForeignKey(
         Recipe,
@@ -136,7 +140,9 @@ class RecipeIngredient(models.Model):
     amount = models.PositiveSmallIntegerField(
         'Количество',
         validators=[
-            MinValueValidator(1, message='Количество ингредиента не может быть меньше 1.')
+            MinValueValidator(
+                1, message='Количество ингредиента не может быть меньше 1.'
+            )
         ]
     )
 
@@ -144,7 +150,8 @@ class RecipeIngredient(models.Model):
         verbose_name = 'Ингредиент в рецепте'
         verbose_name_plural = 'Ингредиенты в рецептах'
         constraints = [
-            # DRY защита: нельзя добавить один и тот же ингредиент в рецепт дважды
+            # DRY защита
+            # нельзя добавить один и тот же ингредиент в рецепт дважды
             models.UniqueConstraint(
                 fields=['recipe', 'ingredient'],
                 name='unique_recipe_ingredient'

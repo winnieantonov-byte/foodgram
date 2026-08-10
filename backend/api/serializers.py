@@ -205,7 +205,7 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(
                 {'ingredients': 'Рецепт не может быть без ингредиентов.'}
             )
-        
+
         ing_ids = [ing['id'] for ing in ingredients]
         if len(ing_ids) != len(set(ing_ids)):
             raise serializers.ValidationError(
