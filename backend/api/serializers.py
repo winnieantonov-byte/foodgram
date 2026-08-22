@@ -30,7 +30,9 @@ class CustomUserCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('email', 'id', 'username', 'first_name', 'last_name', 'password')
+        fields = (
+            'email', 'id', 'username', 'first_name', 'last_name', 'password'
+        )
         extra_kwargs = {'password': {'write_only': True}}
 
     def validate(self, attrs):
@@ -78,7 +80,9 @@ class CustomUserSerializer(serializers.ModelSerializer):
         request = self.context.get('request')
         if not request or request.user.is_anonymous:
             return False
-        return Subscription.objects.filter(user=request.user, author=obj).exists()
+        return Subscription.objects.filter(
+            user=request.user, author=obj
+        ).exists()
 
     def get_avatar(self, obj: User) -> str | None:
         if obj.avatar:
@@ -93,11 +97,17 @@ class SubscriptionSerializer(CustomUserSerializer):
     """Сериализатор для подписок с рецептами автора."""
 
     recipes = serializers.SerializerMethodField()
-    recipes_count = serializers.IntegerField(source='recipes.count', read_only=True)
+    recipes_count = serializers.IntegerField(
+        source='recipes.count', read_only=True
+    )
 
     class Meta(CustomUserSerializer.Meta):
-        fields = CustomUserSerializer.Meta.fields + ('recipes', 'recipes_count')
-        read_only_fields = ('email', 'username', 'first_name', 'last_name', 'avatar')
+        fields = CustomUserSerializer.Meta.fields + (
+            'recipes', 'recipes_count'
+        )
+        read_only_fields = (
+            'email', 'username', 'first_name', 'last_name', 'avatar'
+        )
 
     def get_recipes(self, obj: User) -> List[Dict[str, Any]]:
         request = self.context.get('request')
@@ -144,7 +154,9 @@ class RecipeIngredientReadSerializer(serializers.ModelSerializer):
 
     id = serializers.ReadOnlyField(source='ingredient.id')
     name = serializers.ReadOnlyField(source='ingredient.name')
-    measurement_unit = serializers.ReadOnlyField(source='ingredient.measurement_unit')
+    measurement_unit = serializers.ReadOnlyField(
+        source='ingredient.measurement_unit'
+    )
 
     class Meta:
         model = RecipeIngredient
@@ -236,7 +248,9 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Recipe
-        fields = ('ingredients', 'tags', 'image', 'name', 'text', 'cooking_time')
+        fields = (
+            'ingredients', 'tags', 'image', 'name', 'text', 'cooking_time'
+        )
 
     def validate_cooking_time(self, value):
         if value is not None and value < 1:
@@ -319,7 +333,9 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
 
         return data
 
-    def _save_ingredients(self, recipe: Recipe, ingredients_data: List[Dict[str, Any]]) -> None:
+    def _save_ingredients(
+        self, recipe: Recipe, ingredients_data: List[Dict[str, Any]]
+    ) -> None:
         """Сохраняет ингредиенты для рецепта."""
         RecipeIngredient.objects.bulk_create([
             RecipeIngredient(

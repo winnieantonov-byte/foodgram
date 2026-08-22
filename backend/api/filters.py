@@ -20,9 +20,15 @@ class IngredientFilter(django_filters.FilterSet):
 class RecipeFilter(django_filters.FilterSet):
     """Фильтр для рецептов по автору, избранному и корзине."""
 
-    author = django_filters.ModelChoiceFilter(queryset=User.objects.all())
-    is_favorited = django_filters.NumberFilter(method='filter_is_favorited')
-    is_in_shopping_cart = django_filters.NumberFilter(method='filter_is_in_shopping_cart')
+    author = django_filters.ModelChoiceFilter(
+        queryset=User.objects.all()
+    )
+    is_favorited = django_filters.NumberFilter(
+        method='filter_is_favorited'
+    )
+    is_in_shopping_cart = django_filters.NumberFilter(
+        method='filter_is_in_shopping_cart'
+    )
     tags = BaseInFilter(method='filter_tags')
 
     class Meta:

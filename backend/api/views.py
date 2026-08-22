@@ -22,7 +22,8 @@ from api.serializers import (
     SubscriptionSerializer,
     TagSerializer,
 )
-from apps.recipes.models import Favorite, Ingredient, Recipe, RecipeIngredient, ShoppingCart, Tag
+from apps.recipes.models import Favorite, Ingredient, Recipe
+from apps.recipes.models import RecipeIngredient, ShoppingCart, Tag
 from apps.users.models import Subscription
 
 User = get_user_model()
@@ -41,8 +42,11 @@ class Base64ImageField(serializers.ImageField):
 
 class CustomUserViewSet(UserViewSet):
     """Вьюсет пользователей с подписками и управлением аватаром."""
-
-    @action(["get", "put", "patch", "delete"], detail=False, permission_classes=[IsAuthenticated])
+    @action(
+        ["get", "put", "patch", "delete"],
+        detail=False,
+        permission_classes=[IsAuthenticated]
+    )
     def me(self, request, *args, **kwargs):
         """Обработка эндпоинта /me с защитой от анонимных пользователей."""
         if request.user.is_anonymous:
@@ -147,7 +151,9 @@ class CustomUserViewSet(UserViewSet):
             )
 
         Subscription.objects.create(user=user, author=author)
-        serializer = SubscriptionSerializer(author, context={"request": request})
+        serializer = SubscriptionSerializer(
+            author, context={"request": request}
+        )
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     def _delete_subscription(self, user, author) -> Response:
@@ -216,7 +222,9 @@ class RecipeViewSet(viewsets.ModelViewSet):
             return None
         return int(pk)
 
-    def _manage_relation(self, request: Request, model, pk: int = None) -> Response:
+    def _manage_relation(
+        self, request: Request, model, pk: int = None
+    ) -> Response:
         """Общий обработчик для избранного и корзины покупок."""
         validated_pk = self._validate_pk(pk)
         if validated_pk is None:
@@ -242,7 +250,9 @@ class RecipeViewSet(viewsets.ModelViewSet):
             )
 
         model.objects.create(user=user, recipe=recipe)
-        serializer = CompactRecipeSerializer(recipe, context={"request": request})
+        serializer = CompactRecipeSerializer(
+            recipe, context={"request": request}
+        )
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     def _remove_relation(self, model, user, recipe) -> Response:
@@ -319,8 +329,12 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
         file_content = self._build_shopping_cart_content(user, ingredients)
 
-        response = HttpResponse(file_content, content_type="text/plain; charset=utf-8")
-        response["Content-Disposition"] = 'attachment; filename="shopping_cart.txt"'
+        response = HttpResponse(
+            file_content, content_type="text/plain; charset=utf-8"
+        )
+        response["Content-Disposition"] = (
+            'attachment; filename="shopping_cart.txt"'
+        )
         return response
 
     def _build_shopping_cart_content(self, user, ingredients) -> str:
@@ -333,7 +347,9 @@ class RecipeViewSet(viewsets.ModelViewSet):
         for ing in ingredients:
             lines.append(
                 f"• {ing['ingredient__name']} — "
-                f"{ing['total_amount']} {ing['ingredient__measurement_unit']}\n"
+                f"{ing['total_amount']} {
+                    ing['ingredient__measurement_unit']
+                }\n"
             )
 
         return "".join(lines)

@@ -25,5 +25,9 @@ urlpatterns = [
     path('auth/', include('djoser.urls.authtoken')),
 
     # Короткие ссылки на рецепты
-    path('s/<int:recipe_id>/', RecipeViewSet.as_view({'get': 'get_link'}), name='short-link'),
+    path(
+        's/<int:recipe_id>/', RecipeViewSet.as_view(
+            {'get': 'get_link'}
+        ), name='short-link'
+    ),
 ]
