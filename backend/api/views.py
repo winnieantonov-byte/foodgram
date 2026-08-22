@@ -345,11 +345,9 @@ class RecipeViewSet(viewsets.ModelViewSet):
         ]
 
         for ing in ingredients:
-            lines.append(
-                f"• {ing['ingredient__name']} — "
-                f"{ing['total_amount']} {
-                    ing['ingredient__measurement_unit']
-                }\n"
-            )
+            name = ing['ingredient__name']
+            amount = ing['total_amount']
+            unit = ing['ingredient__measurement_unit']
+            lines.append(f"• {name} — {amount} {unit}\n")
 
         return "".join(lines)
