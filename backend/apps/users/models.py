@@ -4,10 +4,8 @@ from django.db import models
 
 
 class User(AbstractUser):
-    """Кастомная модель пользователя для проекта Foodgram."""
+    """Кастомная модель пользователя."""
 
-    # Переопределяем email
-    # делая его уникальным и обязательным (требование API)
     email = models.EmailField(
         'Адрес электронной почты',
         max_length=254,
@@ -16,13 +14,13 @@ class User(AbstractUser):
     first_name = models.CharField(
         'Имя',
         max_length=150,
+        blank=True,
     )
     last_name = models.CharField(
         'Фамилия',
         max_length=150,
+        blank=True,
     )
-    # Валидатор для юзернейма
-    # исключающий системные имена и странные символы
     username = models.CharField(
         'Уникальный юзернейм',
         max_length=150,
@@ -30,9 +28,9 @@ class User(AbstractUser):
         validators=[
             RegexValidator(
                 regex=r'^[\w.@+-]+\Z',
-                message='Юзернейм содержит недопустимые символы.'
+                message='Юзернейм содержит недопустимые символы.',
             )
-        ]
+        ],
     )
     avatar = models.ImageField(
         'Аватар профиля',
@@ -54,7 +52,7 @@ class User(AbstractUser):
 
 
 class Subscription(models.Model):
-    """Модель подписки пользователей на авторов рецептов."""
+    """Модель подписки на авторов."""
 
     user = models.ForeignKey(
         User,
@@ -73,16 +71,10 @@ class Subscription(models.Model):
         verbose_name = 'Подписка'
         verbose_name_plural = 'Подписки'
         constraints = [
-            # Защита на уровне БД: уникальность пары подписчик-автор
             models.UniqueConstraint(
                 fields=['user', 'author'],
-                name='unique_user_author_subscription'
+                name='unique_user_author_subscription',
             ),
-            # Защита на уровне БД: запрет подписки на самого себя
-            models.CheckConstraint(
-                check=~models.Q(user=models.F('author')),
-                name='prevent_self_subscription'
-            )
         ]
 
     def __str__(self) -> str:

@@ -1,0 +1,927 @@
+﻿newman
+
+diploma
+
+Folder register_and_get_tokens // No Auth / create_users
+Sub-folder create_first_user
+  POST http://127.0.0.1:8000/api/users/ [400 Bad Request, 579B, 37ms]
+  1. ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 201
+  2. ╨б╤В╤А╤Г╨║╤В╤Г╤А╨░ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╜╨░ ╤Б╨╛╨╛╤В╨▓╨╡╤В╤Б╤В╨▓╨╛╨▓╨░╤В╤М ╨╛╨╢╨╕╨┤╨░╨╡╨╝╨╛╨╣
+
+Sub-folder create_second_user
+  POST http://127.0.0.1:8000/api/users/ [400 Bad Request, 579B, 5ms]
+  3. ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 201
+  4. ╨б╤В╤А╤Г╨║╤В╤Г╤А╨░ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╜╨░ ╤Б╨╛╨╛╤В╨▓╨╡╤В╤Б╤В╨▓╨╛╨▓╨░╤В╤М ╨╛╨╢╨╕╨┤╨░╨╡╨╝╨╛╨╣
+
+Sub-folder create_third_user
+  POST http://127.0.0.1:8000/api/users/ [400 Bad Request, 579B, 6ms]
+  5. ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 201
+  6. ╨б╤В╤А╤Г╨║╤В╤Г╤А╨░ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╜╨░ ╤Б╨╛╨╛╤В╨▓╨╡╤В╤Б╤В╨▓╨╛╨▓╨░╤В╤М ╨╛╨╢╨╕╨┤╨░╨╡╨╝╨╛╨╣
+
+Folder register_and_get_tokens // No Auth / get_tokens
+Sub-folder get_token_for_first_user
+  POST http://127.0.0.1:8000/api/auth/token/login/ [200 OK, 368B, 564ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 200
+  -
+  | `Using "_" is deprecated. Use "require('lodash')" inst
+  | ead.`
+  -
+  Pass  ╨б╤В╤А╤Г╨║╤В╤Г╤А╨░ ╨╛╤В╨▓╨╡╤В╨░ ╤Б╨╛╨╛╤В╨▓╨╡╤В╤Б╤В╨▓╤Г╨╡╤В ╨╛╨╢╨╕╨┤╨░╨╡╨╝╨╛╨╣
+
+Sub-folder get_token_for_second_user
+  POST http://127.0.0.1:8000/api/auth/token/login/ [200 OK, 368B, 583ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 200
+  -
+  | `Using "_" is deprecated. Use "require('lodash')" inst
+  | ead.`
+  -
+  Pass  ╨б╤В╤А╤Г╨║╤В╤Г╤А╨░ ╨╛╤В╨▓╨╡╤В╨░ ╤Б╨╛╨╛╤В╨▓╨╡╤В╤Б╤В╨▓╤Г╨╡╤В ╨╛╨╢╨╕╨┤╨░╨╡╨╝╨╛╨╣
+
+Folder register_and_get_tokens // No Auth / create_users_bad_requests
+Sub-folder user_registration_without_email
+  POST http://127.0.0.1:8000/api/users/ [400 Bad Request, 379B, 13ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 400
+
+Sub-folder user_registration_without_username
+  POST http://127.0.0.1:8000/api/users/ [400 Bad Request, 382B, 4ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 400
+
+Sub-folder user_registration_without_first_name
+  POST http://127.0.0.1:8000/api/users/ [400 Bad Request, 384B, 6ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 400
+
+Sub-folder user_registration_without_last_name
+  POST http://127.0.0.1:8000/api/users/ [400 Bad Request, 383B, 7ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 400
+
+Sub-folder user_registration_without_password
+  POST http://127.0.0.1:8000/api/users/ [400 Bad Request, 382B, 5ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 400
+
+Sub-folder user_registration_too_long_email
+  POST http://127.0.0.1:8000/api/users/ [400 Bad Request, 535B, 7ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 400
+
+Sub-folder user_registration_too_long_username
+  POST http://127.0.0.1:8000/api/users/ [400 Bad Request, 454B, 4ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 400
+
+Sub-folder user_registration_too_long_first_name
+  POST http://127.0.0.1:8000/api/users/ [400 Bad Request, 456B, 5ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 400
+
+Sub-folder user_registration_too_long_last_name
+  POST http://127.0.0.1:8000/api/users/ [400 Bad Request, 455B, 6ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 400
+
+Sub-folder user_registration_with_invalid_username
+  POST http://127.0.0.1:8000/api/users/ [400 Bad Request, 422B, 4ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 400
+
+Sub-folder user_registration_email_in_use
+  POST http://127.0.0.1:8000/api/users/ [400 Bad Request, 458B, 6ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 400
+
+Sub-folder user_registration_username_in_use
+  POST http://127.0.0.1:8000/api/users/ [400 Bad Request, 454B, 16ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 400
+
+Folder register_and_get_tokens // No Auth / get_token_bad_requests
+Sub-folder get_token_username_and_email_mismatch
+  POST http://127.0.0.1:8000/api/auth/token/login/ [400 Bad Request, 446B, 580ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 400
+
+Sub-folder get_token_no_email
+  POST http://127.0.0.1:8000/api/auth/token/login/ [400 Bad Request, 446B, 3ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 400
+
+Sub-folder get_token_no_password
+  POST http://127.0.0.1:8000/api/auth/token/login/ [400 Bad Request, 446B, 3ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 400
+
+Folder register_and_get_tokens // No Auth / logout
+Sub-folder logout // User
+  POST http://127.0.0.1:8000/api/auth/token/logout/ [204 No Content, 286B, 14ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 204
+
+Sub-folder get_token
+  POST http://127.0.0.1:8000/api/auth/token/login/ [200 OK, 368B, 608ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 200
+  -
+  | `Using "_" is deprecated. Use "require('lodash')" inst
+  | ead.`
+  -
+  Pass  ╨б╤В╤А╤Г╨║╤В╤Г╤А╨░ ╨╛╤В╨▓╨╡╤В╨░ ╤Б╨╛╨╛╤В╨▓╨╡╤В╤Б╤В╨▓╤Г╨╡╤В ╨╛╨╢╨╕╨┤╨░╨╡╨╝╨╛╨╣
+
+Folder users / get_user_info
+Sub-folder get_user_list // No Auth
+  GET http://127.0.0.1:8000/api/users/ [200 OK, 1.29kB, 6ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 200
+  Pass  ╨б╤В╤А╤Г╨║╤В╤Г╤А╨░ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╜╨░ ╤Б╨╛╨╛╤В╨▓╨╡╤В╤Б╤В╨▓╨╛╨▓╨░╤В╤М ╨╛╨╢╨╕╨┤╨░╨╡╨╝╨╛╨╣
+
+Sub-folder get_user_list// User
+  GET http://127.0.0.1:8000/api/users/ [200 OK, 1.29kB, 8ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 200
+  Pass  ╨б╤В╤А╤Г╨║╤В╤Г╤А╨░ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╜╨░ ╤Б╨╛╨╛╤В╨▓╨╡╤В╤Б╤В╨▓╨╛╨▓╨░╤В╤М ╨╛╨╢╨╕╨┤╨░╨╡╨╝╨╛╨╣
+
+Sub-folder get_user_list_with_limit_param // User
+  GET http://127.0.0.1:8000/api/users/?limit=1 [200 OK, 564B, 6ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 200
+  Pass  ╨б╤В╤А╤Г╨║╤В╤Г╤А╨░ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╜╨░ ╤Б╨╛╨╛╤В╨▓╨╡╤В╤Б╤В╨▓╨╛╨▓╨░╤В╤М ╨╛╨╢╨╕╨┤╨░╨╡╨╝╨╛╨╣
+  Pass  ╨г╨▒╨╡╨┤╨╕╤В╨╡╤Б╤М, ╤З╤В╨╛ ╨╝╨╛╨╢╨╜╨╛ ╨╕╨╖╨╝╨╡╨╜╨╕╤В╤М ╨║╨╛╨╗╨╕╤З╨╡╤Б╤В╨▓╨╛ ╨╛╨▒╤К╨╡╨║╤В╨╛╨▓ ╨╜╨░ ╤Б╤В╤А╨░╨╜╨╕╤Ж╨╡ ╤З╨╡╤А╨╡╨╖ ╨┐╨░╤А╨░╨╝╨╡╤В╤А `limit`
+
+Sub-folder get_profile // No Auth
+  GET http://127.0.0.1:8000/api/users/{{userId}}/ [404 Not Found, 393B, 3ms]
+  7. ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 200
+  8. ╨б╤В╤А╤Г╨║╤В╤Г╤А╨░ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╜╨░ ╤Б╨╛╨╛╤В╨▓╨╡╤В╤Б╤В╨▓╨╛╨▓╨░╤В╤М ╨╛╨╢╨╕╨┤╨░╨╡╨╝╨╛╨╣
+
+Sub-folder get_profile // User
+  GET http://127.0.0.1:8000/api/users/{{userId}}/ [404 Not Found, 393B, 4ms]
+  9. ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 200
+ 10. ╨б╤В╤А╤Г╨║╤В╤Г╤А╨░ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╜╨░ ╤Б╨╛╨╛╤В╨▓╨╡╤В╤Б╤В╨▓╨╛╨▓╨░╤В╤М ╨╛╨╢╨╕╨┤╨░╨╡╨╝╨╛╨╣
+
+Sub-folder users_me // User
+  GET http://127.0.0.1:8000/api/users/me/ [200 OK, 486B, 5ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 200
+  Pass  ╨б╤В╤А╤Г╨║╤В╤Г╤А╨░ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╜╨░ ╤Б╨╛╨╛╤В╨▓╨╡╤В╤Б╤В╨▓╨╛╨▓╨░╤В╤М ╨╛╨╢╨╕╨┤╨░╨╡╨╝╨╛╨╣
+  Pass  ╨Я╨╛╨╗╨╡ `is_subscribed` ╨▓ ╨╛╤В╨▓╨╡╤В╨╡ ╨┤╨╛╨╗╨╢╨╜╨╛ ╨╕╨╝╨╡╤В╤М ╨╖╨╜╨░╤З╨╡╨╜╨╕╨╡ `false`
+
+Folder users / set_avatars // User
+Sub-folder set_avatar // User
+  PUT http://127.0.0.1:8000/api/users/me/avatar/ [200 OK, 381B, 76ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 200
+  Pass  ╨б╤В╤А╤Г╨║╤В╤Г╤А╨░ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╜╨░ ╤Б╨╛╨╛╤В╨▓╨╡╤В╤Б╤В╨▓╨╛╨▓╨░╤В╤М ╨╛╨╢╨╕╨┤╨░╨╡╨╝╨╛╨╣
+
+Sub-folder check_avatar_is_set // User
+  GET http://127.0.0.1:8000/api/users/me/ [200 OK, 534B, 16ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 200
+  Pass  ╨б╤В╤А╤Г╨║╤В╤Г╤А╨░ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╜╨░ ╤Б╨╛╨╛╤В╨▓╨╡╤В╤Б╤В╨▓╨╛╨▓╨░╤В╤М ╨╛╨╢╨╕╨┤╨░╨╡╨╝╨╛╨╣
+  Pass  ╨Я╨╛╨╗╨╡ `avatar` ╨┤╨╛╨╗╨╢╨╜╨╛ ╤Б╨╛╨┤╨╡╤А╨╢╨░╤В╤М ╤Б╤Б╤Л╨╗╨║╤Г ╨╜╨░ ╨░╨▓╨░╤В╨░╤А
+
+Folder users / reset_password
+Sub-folder reset_password // User
+  POST http://127.0.0.1:8000/api/users/set_password/ [204 No Content, 286B, 1149ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 204
+
+Sub-folder get_token_with_new_password
+  POST http://127.0.0.1:8000/api/auth/token/login/ [200 OK, 368B, 568ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 200
+  -
+  | `Using "_" is deprecated. Use "require('lodash')" inst
+  | ead.`
+  -
+  Pass  ╨б╤В╤А╤Г╨║╤В╤Г╤А╨░ ╨╛╤В╨▓╨╡╤В╨░ ╤Б╨╛╨╛╤В╨▓╨╡╤В╤Б╤В╨▓╤Г╨╡╤В ╨╛╨╢╨╕╨┤╨░╨╡╨╝╨╛╨╣
+
+Sub-folder roll_back_password // User
+  POST http://127.0.0.1:8000/api/users/set_password/ [204 No Content, 286B, 1157ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 204
+
+Sub-folder get_token_for_first_user
+  POST http://127.0.0.1:8000/api/auth/token/login/ [200 OK, 368B, 594ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 200
+  -
+  | `Using "_" is deprecated. Use "require('lodash')" inst
+  | ead.`
+  -
+  Pass  ╨б╤В╤А╤Г╨║╤В╤Г╤А╨░ ╨╛╤В╨▓╨╡╤В╨░ ╤Б╨╛╨╛╤В╨▓╨╡╤В╤Б╤В╨▓╤Г╨╡╤В ╨╛╨╢╨╕╨┤╨░╨╡╨╝╨╛╨╣
+
+Folder users / users_bad_requests
+Sub-folder users_me // No Auth
+  GET http://127.0.0.1:8000/api/users/me/ [401 Unauthorized, 453B, 2ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 401
+
+Sub-folder get_non_existing_profile // User
+  GET http://127.0.0.1:8000/api/users/9876/ [404 Not Found, 388B, 5ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 404
+
+Sub-folder reset_password_wrong_password // User
+  POST http://127.0.0.1:8000/api/users/set_password/ [400 Bad Request, 383B, 557ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 400
+
+Sub-folder delete_avatar // No Auth
+  DELETE http://127.0.0.1:8000/api/users/me/avatar/ [401 Unauthorized, 435B, 3ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 401
+
+Sub-folder set_avatar // No Auth
+  PUT http://127.0.0.1:8000/api/users/me/avatar/ [401 Unauthorized, 435B, 2ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 401
+
+Sub-folder set_avatar_empty_body // User
+  PUT http://127.0.0.1:8000/api/users/me/avatar/ [400 Bad Request, 422B, 4ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 400
+
+Folder users / delete_avatar // User
+Sub-folder delete_avatar // User
+  DELETE http://127.0.0.1:8000/api/users/me/avatar/ [204 No Content, 293B, 20ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 204
+
+Sub-folder check_avatar_is_deleted // User
+  GET http://127.0.0.1:8000/api/users/me/ [200 OK, 486B, 6ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 200
+  Pass  ╨б╤В╤А╤Г╨║╤В╤Г╤А╨░ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╜╨░ ╤Б╨╛╨╛╤В╨▓╨╡╤В╤Б╤В╨▓╨╛╨▓╨░╤В╤М ╨╛╨╢╨╕╨┤╨░╨╡╨╝╨╛╨╣
+  Pass  ╨Я╨╛╨╗╨╡ `avatar` ╨┤╨╛╨╗╨╢╨╜╨╛ ╨▒╤Л╤В╤М ╨┐╤Г╤Б╤В╤Л╨╝
+
+Folder tags / get_tags_info
+Sub-folder get_tag_list // No Auth
+  GET http://127.0.0.1:8000/api/tags/ [200 OK, 455B, 3ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 200
+  Pass  ╨б╤В╤А╤Г╨║╤В╤Г╤А╨░ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╜╨░ ╤Б╨╛╨╛╤В╨▓╨╡╤В╤Б╤В╨▓╨╛╨▓╨░╤В╤М ╨╛╨╢╨╕╨┤╨░╨╡╨╝╨╛╨╣
+
+Sub-folder get_tag_list // User
+  GET http://127.0.0.1:8000/api/tags/ [200 OK, 455B, 9ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 200
+  Pass  ╨б╤В╤А╤Г╨║╤В╤Г╤А╨░ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╜╨░ ╤Б╨╛╨╛╤В╨▓╨╡╤В╤Б╤В╨▓╨╛╨▓╨░╤В╤М ╨╛╨╢╨╕╨┤╨░╨╡╨╝╨╛╨╣
+
+Sub-folder get_tag_detail // No Auth
+  GET http://127.0.0.1:8000/api/tags/1/ [200 OK, 367B, 4ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 200
+  Pass  ╨б╤В╤А╤Г╨║╤В╤Г╤А╨░ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╜╨░ ╤Б╨╛╨╛╤В╨▓╨╡╤В╤Б╤В╨▓╨╛╨▓╨░╤В╤М ╨╛╨╢╨╕╨┤╨░╨╡╨╝╨╛╨╣
+
+Sub-folder get_tag_detail // User
+  GET http://127.0.0.1:8000/api/tags/1/ [200 OK, 367B, 6ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 200
+  Pass  ╨б╤В╤А╤Г╨║╤В╤Г╤А╨░ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╜╨░ ╤Б╨╛╨╛╤В╨▓╨╡╤В╤Б╤В╨▓╨╛╨▓╨░╤В╤М ╨╛╨╢╨╕╨┤╨░╨╡╨╝╨╛╨╣
+
+Folder tags / tags_bad_requests
+Sub-folder get_non_existing_tag // User
+  GET http://127.0.0.1:8000/api/tags/9876/ [404 Not Found, 367B, 5ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 404
+
+Sub-folder create_tag // User
+  POST http://127.0.0.1:8000/api/tags/ [405 Method Not Allowed, 387B, 4ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 405
+
+Sub-folder put_tag // User
+  PUT http://127.0.0.1:8000/api/tags/1/ [405 Method Not Allowed, 386B, 4ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 405
+
+Sub-folder patch_tag // User
+  PATCH http://127.0.0.1:8000/api/tags/1/ [405 Method Not Allowed, 388B, 4ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 405
+
+Sub-folder delete_tag // User
+  DELETE http://127.0.0.1:8000/api/tags/1/ [405 Method Not Allowed, 389B, 4ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 405
+
+Folder ingredients / get_ingradients
+Sub-folder get_ingredients_list // No Auth
+  GET http://127.0.0.1:8000/api/ingredients/ [200 OK, 160.93kB, 26ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 200
+  Pass  ╨б╤В╤А╤Г╨║╤В╤Г╤А╨░ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╜╨░ ╤Б╨╛╨╛╤В╨▓╨╡╤В╤Б╤В╨▓╨╛╨▓╨░╤В╤М ╨╛╨╢╨╕╨┤╨░╨╡╨╝╨╛╨╣
+
+Sub-folder get_ingredients_list // User
+  GET http://127.0.0.1:8000/api/ingredients/ [200 OK, 160.93kB, 24ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 200
+  Pass  ╨б╤В╤А╤Г╨║╤В╤Г╤А╨░ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╜╨░ ╤Б╨╛╨╛╤В╨▓╨╡╤В╤Б╤В╨▓╨╛╨▓╨░╤В╤М ╨╛╨╢╨╕╨┤╨░╨╡╨╝╨╛╨╣
+
+Sub-folder get_ingredients_list_with_name_filter // User
+  GET http://127.0.0.1:8000/api/ingredients/?name=╨С [200 OK, 376B, 7ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 200
+  Pass  ╨б╤В╤А╤Г╨║╤В╤Г╤А╨░ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╜╨░ ╤Б╨╛╨╛╤В╨▓╨╡╤В╤Б╤В╨▓╨╛╨▓╨░╤В╤М ╨╛╨╢╨╕╨┤╨░╨╡╨╝╨╛╨╣
+  Pass  ╨Ю╤В╨▓╨╡╤В ╨┤╨╛╨╗╨╢╨╡╨╜ ╤Б╨╛╨┤╨╡╤А╨╢╨░╤В╤М ╨┤╨░╨╜╨╜╤Л╨╡, ╤Г╨┤╨╛╨▓╨╗╨╡╤В╨▓╨╛╤А╤П╤О╤Й╨╕╨╡ ╤Г╤Б╨╗╨╛╨▓╨╕╤П╨╝ ╨┐╨╛╨╕╤Б╨║╨░
+
+Sub-folder get_ingredient // No Auth
+  GET http://127.0.0.1:8000/api/ingredients/170/ [200 OK, 374B, 4ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 200
+  Pass  ╨б╤В╤А╤Г╨║╤В╤Г╤А╨░ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╜╨░ ╤Б╨╛╨╛╤В╨▓╨╡╤В╤Б╤В╨▓╨╛╨▓╨░╤В╤М ╨╛╨╢╨╕╨┤╨░╨╡╨╝╨╛╨╣
+
+Sub-folder get_ingredient // User
+  GET http://127.0.0.1:8000/api/ingredients/170/ [200 OK, 374B, 5ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 200
+  Pass  ╨б╤В╤А╤Г╨║╤В╤Г╤А╨░ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╜╨░ ╤Б╨╛╨╛╤В╨▓╨╡╤В╤Б╤В╨▓╨╛╨▓╨░╤В╤М ╨╛╨╢╨╕╨┤╨░╨╡╨╝╨╛╨╣
+
+Folder ingredients / ingredients_bad_requests
+Sub-folder get_non_existing_ingredient // User
+  GET http://127.0.0.1:8000/api/ingredients/9876/ [404 Not Found, 374B, 6ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 404
+
+Sub-folder create_ingredient // User
+  POST http://127.0.0.1:8000/api/ingredients/ [405 Method Not Allowed, 387B, 5ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 405
+
+Sub-folder put_ingredient // User
+  PUT http://127.0.0.1:8000/api/ingredients/170/ [405 Method Not Allowed, 386B, 4ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 405
+
+Sub-folder patch_ingredient // User
+  PATCH http://127.0.0.1:8000/api/ingredients/170/ [405 Method Not Allowed, 388B, 6ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 405
+
+Sub-folder delete_ingredient // User
+  DELETE http://127.0.0.1:8000/api/ingredients/170/ [405 Method Not Allowed, 389B, 6ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 405
+
+Folder recipes / create_recipes
+Sub-folder create_first_recipe // Second User
+  POST http://127.0.0.1:8000/api/recipes/ [201 Created, 1.06kB, 43ms]
+  -
+  | `Using "_" is deprecated. Use "require('lodash')" inst
+  | ead.`
+  -
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 201
+  Pass  ╨б╤В╤А╤Г╨║╤В╤Г╤А╨░ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╜╨░ ╤Б╨╛╨╛╤В╨▓╨╡╤В╤Б╤В╨╛╨▓╨░╤В╤М ╨╛╨╢╨╕╨┤╨░╨╡╨╝╨╛╨╣
+
+Sub-folder create_second_recipe // Second User
+  POST http://127.0.0.1:8000/api/recipes/ [201 Created, 1.04kB, 37ms]
+  -
+  | `Using "_" is deprecated. Use "require('lodash')" inst
+  | ead.`
+  -
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 201
+  Pass  ╨б╤В╤А╤Г╨║╤В╤Г╤А╨░ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╜╨░ ╤Б╨╛╨╛╤В╨▓╨╡╤В╤Б╤В╨╛╨▓╨░╤В╤М ╨╛╨╢╨╕╨┤╨░╨╡╨╝╨╛╨╣
+
+Sub-folder create_third_recipe // Second User
+  POST http://127.0.0.1:8000/api/recipes/ [201 Created, 894B, 34ms]
+  -
+  | `Using "_" is deprecated. Use "require('lodash')" inst
+  | ead.`
+  -
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 201
+  Pass  ╨б╤В╤А╤Г╨║╤В╤Г╤А╨░ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╜╨░ ╤Б╨╛╨╛╤В╨▓╨╡╤В╤Б╤В╨╛╨▓╨░╤В╤М ╨╛╨╢╨╕╨┤╨░╨╡╨╝╨╛╨╣
+
+Sub-folder create_fourth_recipe // Second User
+  POST http://127.0.0.1:8000/api/recipes/ [201 Created, 871B, 37ms]
+  -
+  | `Using "_" is deprecated. Use "require('lodash')" inst
+  | ead.`
+  -
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 201
+  Pass  ╨б╤В╤А╤Г╨║╤В╤Г╤А╨░ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╜╨░ ╤Б╨╛╨╛╤В╨▓╨╡╤В╤Б╤В╨╛╨▓╨░╤В╤М ╨╛╨╢╨╕╨┤╨░╨╡╨╝╨╛╨╣
+
+Sub-folder create_fifth_recipe // User
+  POST http://127.0.0.1:8000/api/recipes/ [201 Created, 844B, 35ms]
+  -
+  | `Using "_" is deprecated. Use "require('lodash')" inst
+  | ead.`
+  -
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 201
+  Pass  ╨б╤В╤А╤Г╨║╤В╤Г╤А╨░ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╜╨░ ╤Б╨╛╨╛╤В╨▓╨╡╤В╤Б╤В╨╛╨▓╨░╤В╤М ╨╛╨╢╨╕╨┤╨░╨╡╨╝╨╛╨╣
+
+Folder recipes / get_recipes
+Sub-folder get_recipes_list // No Auth
+  GET http://127.0.0.1:8000/api/recipes/ [200 OK, 4.21kB, 27ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 200
+  Pass  ╨б╤В╤А╤Г╨║╤В╤Г╤А╨░ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╜╨░ ╤Б╨╛╨╛╤В╨▓╨╡╤В╤Б╤В╨▓╨╛╨▓╨░╤В╤М ╨╛╨╢╨╕╨┤╨░╨╡╨╝╨╛╨╣
+
+Sub-folder get_recipes_list // User
+  GET http://127.0.0.1:8000/api/recipes/ [200 OK, 4.21kB, 40ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 200
+  Pass  ╨б╤В╤А╤Г╨║╤В╤Г╤А╨░ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╜╨░ ╤Б╨╛╨╛╤В╨▓╨╡╤В╤Б╤В╨▓╨╛╨▓╨░╤В╤М ╨╛╨╢╨╕╨┤╨░╨╡╨╝╨╛╨╣
+
+Sub-folder get_recipes_list_with_limit_param // User
+  GET http://127.0.0.1:8000/api/recipes/?limit=2 [200 OK, 1.49kB, 40ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 200
+  Pass  ╨б╤В╤А╤Г╨║╤В╤Г╤А╨░ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╜╨░ ╤Б╨╛╨╛╤В╨▓╨╡╤В╤Б╤В╨▓╨╛╨▓╨░╤В╤М ╨╛╨╢╨╕╨┤╨░╨╡╨╝╨╛╨╣
+  Pass  ╨Ф╨╛╨╗╨╢╨╜╨░ ╨▒╤Л╤В╤М ╨▓╨╛╨╖╨╝╨╛╨╢╨╜╨╛╤Б╤В╤М ╨╕╨╖╨╝╨╡╨╜╨╕╤В╤М ╨║╨╛╨╗╨╕╤З╨╡╤Б╤В╨▓╨╛ ╨╛╨▒╤К╨╡╨║╤В╨╛╨▓ ╨╜╨░ ╤Б╤В╤А╨░╨╜╨╕╤Ж╨╡ ╤З╨╡╤А╨╡╨╖ ╨┐╨░╤А╨░╨╝╨╡╤В╤А `limit`
+
+Sub-folder get_recipes_list_with_author_param // User
+  GET http://127.0.0.1:8000/api/recipes/?author={{userId}} [400 Bad Request, 487B, 6ms]
+ 11. ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 200
+ 12. ╨б╤В╤А╤Г╨║╤В╤Г╤А╨░ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╜╨░ ╤Б╨╛╨╛╤В╨▓╨╡╤В╤Б╤В╨▓╨╛╨▓╨░╤В╤М ╨╛╨╢╨╕╨┤╨░╨╡╨╝╨╛╨╣
+ 13. ╨Ф╨╛╨╗╨╢╨╜╨░ ╨▒╤Л╤В╤М ╨▓╨╛╨╖╨╝╨╛╨╢╨╜╨╛╤Б╤В╤М ╤Д╨╕╨╗╤М╤В╤А╨░╤Ж╨╕╨╕ ╤А╨╡╤Ж╨╡╨┐╤В╨╛╨▓ ╤З╨╡╤А╨╡╨╖ ╨┐╨░╤А╨░╨╝╨╡╤В╤А ╨╖╨░╨┐╤А╨╛╤Б╨░ `author`
+
+Sub-folder get_recipes_list_with_two_tags_param // User
+  GET http://127.0.0.1:8000/api/recipes/?tags=lunch&tags=dinner [200 OK, 3.48kB, 25ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 200
+  Pass  ╨б╤В╤А╤Г╨║╤В╤Г╤А╨░ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╜╨░ ╤Б╨╛╨╛╤В╨▓╨╡╤В╤Б╤В╨▓╨╛╨▓╨░╤В╤М ╨╛╨╢╨╕╨┤╨░╨╡╨╝╨╛╨╣
+  Pass  ╨Ф╨╛╨╗╨╢╨╜╨░ ╨▒╤Л╤В╤М ╨▓╨╛╨╖╨╝╨╛╨╢╨╜╨╛╤Б╤В╤М ╤Д╨╕╨╗╤М╤В╤А╨░╤Ж╨╕╨╕ ╤А╨╡╤Ж╨╡╨┐╤В╨╛╨▓ ╤З╨╡╤А╨╡╨╖ ╨┐╨░╤А╨░╨╝╨╡╤В╤А ╨╖╨░╨┐╤А╨╛╤Б╨░ `tags`
+
+Sub-folder get_recipe_detail // No Auth
+  GET http://127.0.0.1:8000/api/recipes/12/ [200 OK, 1.07kB, 8ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 200
+  Pass  ╨б╤В╤А╤Г╨║╤В╤Г╤А╨░ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╜╨░ ╤Б╨╛╨╛╤В╨▓╨╡╤В╤Б╤В╨▓╨╛╨▓╨░╤В╤М ╨╛╨╢╨╕╨┤╨░╨╡╨╝╨╛╨╣
+
+Sub-folder get_recipe_detail // User
+  GET http://127.0.0.1:8000/api/recipes/12/ [200 OK, 1.07kB, 8ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 200
+  Pass  ╨б╤В╤А╤Г╨║╤В╤Г╤А╨░ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╜╨░ ╤Б╨╛╨╛╤В╨▓╨╡╤В╤Б╤В╨▓╨╛╨▓╨░╤В╤М ╨╛╨╢╨╕╨┤╨░╨╡╨╝╨╛╨╣
+
+Folder recipes / get_recipe_short_link
+Sub-folder get_recipe_short_link // User
+  GET http://127.0.0.1:8000/api/recipes/12/get-link/ [200 OK, 359B, 4ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 200
+  Pass  ╨б╤В╤А╤Г╨║╤В╤Г╤А╨░ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╜╨░ ╤Б╨╛╨╛╤В╨▓╨╡╤В╤Б╤В╨▓╨╛╨▓╨░╤В╤М ╨╛╨╢╨╕╨┤╨░╨╡╨╝╨╛╨╣
+
+Sub-folder get_recipe_short_link // No Auth
+  GET http://127.0.0.1:8000/api/recipes/12/get-link/ [200 OK, 359B, 3ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 200
+  Pass  ╨б╤В╤А╤Г╨║╤В╤Г╤А╨░ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╜╨░ ╤Б╨╛╨╛╤В╨▓╨╡╤В╤Б╤В╨▓╨╛╨▓╨░╤В╤М ╨╛╨╢╨╕╨┤╨░╨╡╨╝╨╛╨╣
+
+Folder recipes / update_recipes
+Sub-folder update_recipe // Second User
+  PATCH http://127.0.0.1:8000/api/recipes/12/ [200 OK, 1.01kB, 38ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 200
+  Pass  ╨б╤В╤А╤Г╨║╤В╤Г╤А╨░ ╨╛╤В╨▓╨╡╤В╨░ ╤Б╨╛╨╛╤В╨▓╨╡╤В╤Б╤В╨▓╤Г╨╡╤В ╨╛╨╢╨╕╨┤╨░╨╡╨╝╨╛╨╣
+
+Folder recipes / recipes_bad_requests / create_recipe_bad_requests
+Sub-folder create_recipe_without_ingredients // User
+  POST http://127.0.0.1:8000/api/recipes/ [400 Bad Request, 390B, 7ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 400
+
+Sub-folder create_recipe_empty_ingredients_fields // User
+  POST http://127.0.0.1:8000/api/recipes/ [400 Bad Request, 417B, 5ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 400
+
+Sub-folder create_recipe_with_non_existing_ingredient // User
+  POST http://127.0.0.1:8000/api/recipes/ [400 Bad Request, 465B, 7ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 400
+
+Sub-folder create_recipe_with_ingredient_amount_less_than_one // User
+  POST http://127.0.0.1:8000/api/recipes/ [400 Bad Request, 433B, 5ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 400
+
+Sub-folder create_recipe_with_repetitive_ingredients // User
+  POST http://127.0.0.1:8000/api/recipes/ [400 Bad Request, 415B, 6ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 400
+
+Sub-folder create_recipe_without_tags_field // User
+  POST http://127.0.0.1:8000/api/recipes/ [400 Bad Request, 383B, 6ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 400
+
+Sub-folder create_recipe_empty_tags // User
+  POST http://127.0.0.1:8000/api/recipes/ [400 Bad Request, 409B, 5ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 400
+
+Sub-folder create_recipe_with_repetitive_tags // User
+  POST http://127.0.0.1:8000/api/recipes/ [400 Bad Request, 394B, 5ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 400
+
+Sub-folder create_recipe_with_non_existing_tag // User
+  POST http://127.0.0.1:8000/api/recipes/ [400 Bad Request, 448B, 6ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 400
+
+Sub-folder create_recipe_without_image_field // User
+  POST http://127.0.0.1:8000/api/recipes/ [400 Bad Request, 384B, 5ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 400
+
+Sub-folder create_recipe_empty_image // User
+  POST http://127.0.0.1:8000/api/recipes/ [400 Bad Request, 434B, 5ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 400
+
+Sub-folder create_recipe_without_name_field // User
+  POST http://127.0.0.1:8000/api/recipes/ [400 Bad Request, 378B, 7ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 400
+
+Sub-folder create_recipe_empty_name // User
+  POST http://127.0.0.1:8000/api/recipes/ [400 Bad Request, 398B, 8ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 400
+
+Sub-folder create_recipe_too_long_name // User
+  POST http://127.0.0.1:8000/api/recipes/ [400 Bad Request, 450B, 6ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 400
+
+Sub-folder create_recipe_without_text_field // User
+  POST http://127.0.0.1:8000/api/recipes/ [400 Bad Request, 378B, 7ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 400
+
+Sub-folder create_recipe_empty_text // User
+  POST http://127.0.0.1:8000/api/recipes/ [400 Bad Request, 398B, 5ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 400
+
+Sub-folder create_recipe_without_cooking_time_field // User
+  POST http://127.0.0.1:8000/api/recipes/ [400 Bad Request, 391B, 6ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 400
+
+Sub-folder create_recipe_empty_string_as_cooking_time // User
+  POST http://127.0.0.1:8000/api/recipes/ [400 Bad Request, 399B, 8ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 400
+
+Sub-folder create_recipe_cooking_time_less_than_one // User
+  POST http://127.0.0.1:8000/api/recipes/ [400 Bad Request, 446B, 6ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 400
+
+Sub-folder create_recipe // No Auth
+  POST http://127.0.0.1:8000/api/recipes/ [401 Unauthorized, 439B, 2ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 401
+
+Folder recipes / recipes_bad_requests / update_recipe_bad_requests
+Sub-folder update_recipe_not_author // User
+  PATCH http://127.0.0.1:8000/api/recipes/13/ [403 Forbidden, 461B, 6ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 403
+
+Sub-folder update_recipe // No Auth
+  PATCH http://127.0.0.1:8000/api/recipes/13/ [401 Unauthorized, 453B, 5ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 401
+
+Sub-folder update_recipe_without_ingredients_field // Second User
+  PATCH http://127.0.0.1:8000/api/recipes/13/ [400 Bad Request, 404B, 7ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 400
+
+Sub-folder update_recipe_empty_ingredients // Second User
+  PATCH http://127.0.0.1:8000/api/recipes/13/ [400 Bad Request, 431B, 7ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 400
+
+Sub-folder update_recipe_with_non_existing_ingredient // Second User
+  PATCH http://127.0.0.1:8000/api/recipes/13/ [400 Bad Request, 479B, 7ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 400
+
+Sub-folder update_recipe_with_ingredient_amount_less_than_one // Second User
+  PATCH http://127.0.0.1:8000/api/recipes/13/ [400 Bad Request, 447B, 22ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 400
+
+Sub-folder update_recipe_with_repetitive_ingredients // Second User
+  PATCH http://127.0.0.1:8000/api/recipes/13/ [400 Bad Request, 429B, 7ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 400
+
+Sub-folder update_recipe_without_tags_field // Second User
+  PATCH http://127.0.0.1:8000/api/recipes/13/ [400 Bad Request, 397B, 7ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 400
+
+Sub-folder update_recipe_empty_tags // Second User
+  PATCH http://127.0.0.1:8000/api/recipes/13/ [400 Bad Request, 423B, 7ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 400
+
+Sub-folder update_recipe_with_non_existing_tag // Second User
+  PATCH http://127.0.0.1:8000/api/recipes/13/ [400 Bad Request, 462B, 7ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 400
+
+Sub-folder update_recipe_repetitive_tags  // Second User
+  PATCH http://127.0.0.1:8000/api/recipes/13/ [400 Bad Request, 408B, 8ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 400
+
+Sub-folder update_recipe_empty_image  // Second User
+  PATCH http://127.0.0.1:8000/api/recipes/13/ [400 Bad Request, 448B, 6ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 400
+
+Sub-folder update_recipe_empty_name  // Second User
+  PATCH http://127.0.0.1:8000/api/recipes/13/ [400 Bad Request, 412B, 8ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 400
+
+Sub-folder update_recipe_too_long_name  // Second User
+  PATCH http://127.0.0.1:8000/api/recipes/13/ [400 Bad Request, 464B, 7ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 400
+
+Sub-folder update_recipe_empty_text  // Second User
+  PATCH http://127.0.0.1:8000/api/recipes/13/ [400 Bad Request, 412B, 7ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 400
+
+Sub-folder update_recipe_empty_string_as_cooking_time  // Second User
+  PATCH http://127.0.0.1:8000/api/recipes/13/ [400 Bad Request, 413B, 8ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 400
+
+Sub-folder update_recipe_empty_cooking_time_less_than_one  // Second User
+  PATCH http://127.0.0.1:8000/api/recipes/13/ [400 Bad Request, 460B, 6ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 400
+
+Sub-folder update_none_existing_recipe // Second User
+  PATCH http://127.0.0.1:8000/api/recipes/9876/ [404 Not Found, 390B, 5ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 404
+
+Folder subscriptions / create_subscriptions
+Sub-folder create_subscription // User
+  POST http://127.0.0.1:8000/api/users/{{thirdUserId}}/subscribe/ [500 Internal Server Error, 448B, 337ms]
+ 14. ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 201
+ 15. ╨б╤В╤А╤Г╨║╤В╤Г╤А╨░ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╜╨░ ╤Б╨╛╨╛╤В╨▓╨╡╤В╤Б╤В╨▓╨╛╨▓╨░╤В╤М ╨╛╨╢╨╕╨┤╨░╨╡╨╝╨╛╨╣
+
+Sub-folder create_subscription_with_recipes_limit_param // User
+  POST http://127.0.0.1:8000/api/users/{{secondUserId}}/subscribe/?recipes_limit=2 [500 Internal Server Error, 448B, 27ms]
+ 16. ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 201
+ 17. ╨б╤В╤А╤Г╨║╤В╤Г╤А╨░ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╜╨░ ╤Б╨╛╨╛╤В╨▓╨╡╤В╤Б╤В╨▓╨╛╨▓╨░╤В╤М ╨╛╨╢╨╕╨┤╨░╨╡╨╝╨╛╨╣
+ 18. ╨Ф╨╛╨╗╨╢╨╜╨░ ╨▒╤Л╤В╤М ╨▓╨╛╨╖╨╝╨╛╨╢╨╜╨╛╤Б╤В╤М ╨╕╨╖╨╝╨╡╨╜╨╕╤В╤М ╨║╨╛╨╗╨╕╤З╨╡╤Б╤В╨▓╨╛ ╨▓╤Л╨▓╨╛╨┤╨╕╨╝╤Л╤Е ╤А╨╡╤Ж╨╡╨┐╤В╨╛╨▓ ╨▓ ╨┤╨░╨╜╨╜╤Л╤Е ╨┐╨╛╨╗╤М╨╖╨╛╨▓╨░╤В╨╡╨╗╤П ╤З╨╡╤А╨╡╨╖ ╨┐╨░╤А╨░╨╝╨╡╤В╤А `recipes_limit`
+
+Folder subscriptions / get_subscriptions
+Sub-folder get_subscription_list // User
+  GET http://127.0.0.1:8000/api/users/subscriptions/ [200 OK, 368B, 5ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 200
+  Pass  ╨б╤В╤А╤Г╨║╤В╤Г╤А╨░ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╜╨░ ╤Б╨╛╨╛╤В╨▓╨╡╤В╤Б╤В╨▓╨╛╨▓╨░╤В╤М ╨╛╨╢╨╕╨┤╨░╨╡╨╝╨╛╨╣
+
+Sub-folder get_subscription_list_with_limit_param // User
+  GET http://127.0.0.1:8000/api/users/subscriptions/?limit=1 [200 OK, 368B, 5ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 200
+  Pass  ╨б╤В╤А╤Г╨║╤В╤Г╤А╨░ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╜╨░ ╤Б╨╛╨╛╤В╨▓╨╡╤В╤Б╤В╨▓╨╛╨▓╨░╤В╤М ╨╛╨╢╨╕╨┤╨░╨╡╨╝╨╛╨╣
+ 19. ╨Ф╨╛╨╗╨╢╨╜╨░ ╨▒╤Л╤В╤М ╨▓╨╛╨╖╨╝╨╛╨╢╨╜╨╛╤Б╤В╤М ╨╕╨╖╨╝╨╡╨╜╨╕╤В╤М ╨║╨╛╨╗╨╕╤З╨╡╤Б╤В╨▓╨╛ ╨╛╨▒╤К╨╡╨║╤В╨╛╨▓ ╨╜╨░ ╤Б╤В╤А╨░╨╜╨╕╤Ж╨╡ ╤З╨╡╤А╨╡╨╖ ╨┐╨░╤А╨░╨╝╨╡╤В╤А ╨╖╨░╨┐╤А╨╛╤Б╨░ `limit`
+
+Sub-folder get_subscription_list_with_recipes_limit_param // User
+  GET http://127.0.0.1:8000/api/users/subscriptions/?recipes_limit=2 [200 OK, 368B, 8ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 200
+  Pass  ╨б╤В╤А╤Г╨║╤В╤Г╤А╨░ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╜╨░ ╤Б╨╛╨╛╤В╨▓╨╡╤В╤Б╤В╨▓╨╛╨▓╨░╤В╤М ╨╛╨╢╨╕╨┤╨░╨╡╨╝╨╛╨╣
+  Pass  ╨г╨▒╨╡╨┤╨╕╤В╨╡╤Б╤М, ╤З╤В╨╛ ╨║╨╛╨╗╨╕╤З╨╡╤Б╤В╨▓╨╛ ╨▓╤Л╨▓╨╛╨┤╨╕╨╝╤Л╤Е ╤А╨╡╤Ж╨╡╨┐╤В╨╛╨▓ ╨▓ ╨┤╨░╨╜╨╜╤Л╤Е ╨┐╨╛╨╗╤М╨╖╨╛╨▓╨░╤В╨╡╨╗╤П ╨╝╨╛╨╢╨╜╨╛ ╨╕╨╖╨╝╨╡╨╜╨╕╤В╤М ╤З╨╡╤А╨╡╨╖ ╨┐╨░╤А╨░╨╝╨╡╤В╤А `recipes_limit`
+
+Folder subscriptions / subscription_bad_requests
+Sub-folder create_subscription // No Auth
+  POST http://127.0.0.1:8000/api/users/{{thirdUserId}}/subscribe/ [401 Unauthorized, 436B, 2ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 401
+
+Sub-folder create_duplicated_subscription // User
+  POST http://127.0.0.1:8000/api/users/{{thirdUserId}}/subscribe/ [500 Internal Server Error, 448B, 33ms]
+ 20. ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 400
+
+Sub-folder create_self_subscription // User
+  POST http://127.0.0.1:8000/api/users/{{userId}}/subscribe/ [500 Internal Server Error, 448B, 33ms]
+ 21. ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 400
+
+Sub-folder create_subscription_to_non_existing_author // User
+  POST http://127.0.0.1:8000/api/users/9876/subscribe/ [404 Not Found, 371B, 5ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 404
+
+Folder shopping_cart / add_to_shopping_cart
+Sub-folder add_to_shopping_cart // User
+  POST http://127.0.0.1:8000/api/recipes/12/shopping_cart/ [201 Created, 519B, 16ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 201
+  Pass  ╨б╤В╤А╤Г╨║╤В╤Г╤А╨░ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╜╨░ ╤Б╨╛╨╛╤В╨▓╨╡╤В╤Б╤В╨▓╨╛╨▓╨░╤В╤М ╨╛╨╢╨╕╨┤╨░╨╡╨╝╨╛╨╣
+
+Folder shopping_cart / download_shopping_cart
+Sub-folder download_shopping_cart // User
+  GET http://127.0.0.1:8000/api/recipes/download_shopping_cart/ [200 OK, 485B, 6ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 200
+
+Folder shopping_cart / shopping_cart_bad_requests
+Sub-folder add_to_shopping_cart // No Auth
+  POST http://127.0.0.1:8000/api/recipes/12/shopping_cart/ [401 Unauthorized, 436B, 6ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 401
+
+Sub-folder add_again_to_shopping_cart // User
+  POST http://127.0.0.1:8000/api/recipes/12/shopping_cart/ [400 Bad Request, 403B, 7ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 400
+
+Sub-folder add_non_existing_recipe_to_shopping_cart // User
+  POST http://127.0.0.1:8000/api/recipes/9876/shopping_cart/ [404 Not Found, 373B, 5ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 404
+
+Folder favorite / add_to_favorite
+Sub-folder add_to_favorite // User
+  POST http://127.0.0.1:8000/api/recipes/12/favorite/ [201 Created, 519B, 166ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 201
+  Pass  ╨б╤В╤А╤Г╨║╤В╤Г╤А╨░ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╜╨░ ╤Б╨╛╨╛╤В╨▓╨╡╤В╤Б╤В╨▓╨╛╨▓╨░╤В╤М ╨╛╨╢╨╕╨┤╨░╨╡╨╝╨╛╨╣
+
+Folder favorite / favorite_bad_requests
+Sub-folder add_to_favorite // No Auth
+  POST http://127.0.0.1:8000/api/recipes/12/favorite/ [401 Unauthorized, 436B, 4ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 401
+
+Sub-folder add_again_to_favorite // User
+  POST http://127.0.0.1:8000/api/recipes/12/favorite/ [400 Bad Request, 403B, 7ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 400
+
+Sub-folder add_non_existing_recipe_to_favorite // User
+  POST http://127.0.0.1:8000/api/recipes/9876/favorite/ [404 Not Found, 373B, 4ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 404
+
+Folder recipe_filters_for_favorite_and_shopping_cart
+Sub-folder get_recipes_list_with_is_in_shopping_cart_param // User
+  GET http://127.0.0.1:8000/api/recipes/?is_in_shopping_cart=1 [200 OK, 1.05kB, 13ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 200
+  Pass  ╨б╤В╤А╤Г╨║╤В╤Г╤А╨░ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╜╨░ ╤Б╨╛╨╛╤В╨▓╨╡╤В╤Б╤В╨▓╨╛╨▓╨░╤В╤М ╨╛╨╢╨╕╨┤╨░╨╡╨╝╨╛╨╣
+  Pass  ╨Ф╨╛╨╗╨╢╨╜╨░ ╨▒╤Л╤В╤М ╨▓╨╛╨╖╨╝╨╛╨╢╨╜╨╛╤Б╤В╤М ╤Д╨╕╨╗╤М╤В╤А╨╛╨▓╨░╤В╤М ╤А╨╡╤Ж╨╡╨┐╤В╤Л ╤З╨╡╤А╨╡╨╖ ╨┐╨░╤А╨░╨╝╨╡╤В╤А ╨╖╨░╨┐╤А╨╛╤Б╨░ `is_in_shopping_cart`
+
+Sub-folder get_recipes_list_with_is_in_shopping_cart_param // No Auth
+  GET http://127.0.0.1:8000/api/recipes/?is_in_shopping_cart=1 [200 OK, 4.18kB, 25ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 200
+  Pass  ╨б╤В╤А╤Г╨║╤В╤Г╤А╨░ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╜╨░ ╤Б╨╛╨╛╤В╨▓╨╡╤В╤Б╤В╨▓╨╛╨▓╨░╤В╤М ╨╛╨╢╨╕╨┤╨░╨╡╨╝╨╛╨╣
+
+Sub-folder get_recipes_list_with_is_favorited_param // User
+  GET http://127.0.0.1:8000/api/recipes/?is_favorited=1 [200 OK, 1.05kB, 15ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 200
+  Pass  ╨б╤В╤А╤Г╨║╤В╤Г╤А╨░ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╜╨░ ╤Б╨╛╨╛╤В╨▓╨╡╤В╤Б╤В╨▓╨╛╨▓╨░╤В╤М ╨╛╨╢╨╕╨┤╨░╨╡╨╝╨╛╨╣
+  Pass  ╨Ф╨╛╨╗╨╢╨╜╨░ ╨▒╤Л╤В╤М ╨▓╨╛╨╖╨╝╨╛╨╢╨╜╨╛╤Б╤В╤М ╤Д╨╕╨╗╤М╤В╤А╨╛╨▓╨░╤В╤М ╤А╨╡╤Ж╨╡╨┐╤В╤Л ╤З╨╡╤А╨╡╨╖ ╨┐╨░╤А╨░╨╝╨╡╤В╤А ╨╖╨░╨┐╤А╨╛╤Б╨░ `is_favorited`
+
+Sub-folder get_recipes_list_with_is_favorited_param // No Auth
+  GET http://127.0.0.1:8000/api/recipes/?is_favorited=1 [200 OK, 4.18kB, 22ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 200
+  Pass  ╨б╤В╤А╤Г╨║╤В╤Г╤А╨░ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╜╨░ ╤Б╨╛╨╛╤В╨▓╨╡╤В╤Б╤В╨▓╨╛╨▓╨░╤В╤М ╨╛╨╢╨╕╨┤╨░╨╡╨╝╨╛╨╣
+
+Folder delete_requests / subscriptions / bad_requests
+Sub-folder delete_subscription // No Auth
+  DELETE http://127.0.0.1:8000/api/users/{{thirdUserId}}/subscribe/ [401 Unauthorized, 436B, 2ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 401
+
+Sub-folder delete_non_existing_subscription // Second User
+  DELETE http://127.0.0.1:8000/api/users/{{thirdUserId}}/subscribe/ [500 Internal Server Error, 448B, 26ms]
+ 22. ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 400
+
+Sub-folder delete_subscription_with_non_existing_author_in_url // Second User
+  DELETE http://127.0.0.1:8000/api/users/9876/subscribe/ [404 Not Found, 371B, 5ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 404
+
+Folder delete_requests / subscriptions
+Sub-folder delete_first_subscription // User
+  DELETE http://127.0.0.1:8000/api/users/{{thirdUserId}}/subscribe/ [500 Internal Server Error, 448B, 27ms]
+ 23. ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 204
+
+Sub-folder delete_second_subscription // User
+  DELETE http://127.0.0.1:8000/api/users/{{secondUserId}}/subscribe/ [500 Internal Server Error, 448B, 27ms]
+ 24. ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 204
+
+Folder delete_requests / shopping_cart / bad_requests
+Sub-folder remove_from_shopping_cart // No Auth
+  DELETE http://127.0.0.1:8000/api/recipes/12/shopping_cart/ [401 Unauthorized, 436B, 3ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 401
+
+Sub-folder remove_not_added_from_shopping_cart // Second User
+  DELETE http://127.0.0.1:8000/api/recipes/12/shopping_cart/ [400 Bad Request, 388B, 21ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 400
+
+Sub-folder remove_non_existing_recipe_from_shopping_cart // Second User
+  DELETE http://127.0.0.1:8000/api/recipes/9876/shopping_cart/ [404 Not Found, 373B, 16ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 404
+
+Folder delete_requests / shopping_cart
+Sub-folder remove_from_shopping_cart // User
+  DELETE http://127.0.0.1:8000/api/recipes/12/shopping_cart/ [204 No Content, 294B, 30ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 204
+
+Folder delete_requests / favorite / bad_requests
+Sub-folder remove_from_favorite // No Auth
+  DELETE http://127.0.0.1:8000/api/recipes/12/favorite/ [401 Unauthorized, 436B, 2ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 401
+
+Sub-folder remove_not_added_from_favorite // Second User
+  DELETE http://127.0.0.1:8000/api/recipes/12/favorite/ [400 Bad Request, 388B, 5ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 400
+
+Sub-folder remove_non_existing_recipe_from_favorite // Second User
+  DELETE http://127.0.0.1:8000/api/recipes/9876/favorite/ [404 Not Found, 373B, 6ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 404
+
+Folder delete_requests / favorite
+Sub-folder remove_from_favorite // User
+  DELETE http://127.0.0.1:8000/api/recipes/12/favorite/ [204 No Content, 294B, 20ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 204
+
+Folder delete_requests / recipes / bad_requests
+Sub-folder delete_recipe // No Auth
+  DELETE http://127.0.0.1:8000/api/recipes/16/ [401 Unauthorized, 453B, 7ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 401
+
+Sub-folder delete_recipe_not_by_author // Second User
+  DELETE http://127.0.0.1:8000/api/recipes/16/ [403 Forbidden, 461B, 9ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 403
+
+Sub-folder delete_non_existing_recipe // Second User
+  DELETE http://127.0.0.1:8000/api/recipes/9876/ [404 Not Found, 390B, 5ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 404
+
+Folder delete_requests / recipes
+Sub-folder delete_first_recipe // Second User
+  DELETE http://127.0.0.1:8000/api/recipes/12/ [204 No Content, 311B, 18ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 204
+
+Sub-folder delete_second_recipe // Second User
+  DELETE http://127.0.0.1:8000/api/recipes/13/ [204 No Content, 311B, 20ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 204
+
+Sub-folder delete_third_recipe // Second User
+  DELETE http://127.0.0.1:8000/api/recipes/14/ [204 No Content, 311B, 19ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 204
+
+Sub-folder delete_fourth_recipe // Second User
+  DELETE http://127.0.0.1:8000/api/recipes/15/ [204 No Content, 311B, 14ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 204
+
+Sub-folder delete_fifth_recipe // Second User
+  DELETE http://127.0.0.1:8000/api/recipes/16/ [204 No Content, 311B, 19ms]
+  Pass  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 204
+
+--------------------------------------------------------------------
+|                         |           executed |            failed |
+--------------------------+--------------------+--------------------
+|              iterations |                  1 |                 0 |
+--------------------------+--------------------+--------------------
+|                requests |                157 |                 0 |
+--------------------------+--------------------+--------------------
+|            test-scripts |                451 |                 0 |
+--------------------------+--------------------+--------------------
+|      prerequest-scripts |                294 |                 0 |
+--------------------------+--------------------+--------------------
+|              assertions |                222 |                24 |
+--------------------------------------------------------------------
+| total run duration: 24.4s                                        |
+--------------------------------------------------------------------
+| total data received: 360.95kB (approx)                           |
+--------------------------------------------------------------------
+| average response time: 54ms [min: 2ms, max: 1157ms, s.d.: 173ms] |
+--------------------------------------------------------------------
+
+[31m   # [39m[31m failure        [39m[31m detail                                                                                                                                                                                                                                                                                                                                                                           [39m
+[90m     [39m[90m                [39m[90m                                                                                                                                                                                                                                                                                                                                                                                  [39m
+ 01.  AssertionError  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 201                                                                                                                                                                                                                                                                                                                                                
+                      ╨г╨▒╨╡╨┤╨╕╤В╨╡╤Б╤М, ╤З╤В╨╛ ╨╖╨░╨┐╤А╨╛c ╨╜╨░ ╤А╨╡╨│╨╕╤Б╤В╤А╨░╤Ж╨╕╤О ╨╜╨╛╨▓╨╛╨│╨╛ ╨┐╨╛╨╗╤М╨╖╨╛╨▓╨░╤В╨╡╨╗╤П, ╤Б╨╛╨┤╨╡╤А╨╢╨░╤Й╨╕╨╣ ╨║╨╛╤А╤А╨╡╨║╤В╨╜╤Л╨╡ ╨┤╨░╨╜╨╜╤Л╨╡, ╨▓╨╛╨╖╨▓╤А╨░╤Й╨░╨╡╤В ╨╛╤В╨▓╨╡╤В ╤Б╨╛ ╤Б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤╨╛╨╝ 201: expected 'Bad Request' to deeply equal 'Created'                                                                                                                                                                                                   
+                      at assertion:0 in test-script                                                                                                                                                                                                                                                                                                                                                    
+                      inside "register_and_get_tokens // No Auth / create_users / create_first_user"                                                                                                                                                                                                                                                                                                   
+[90m     [39m[90m                [39m[90m                                                                                                                                                                                                                                                                                                                                                                                  [39m
+ 02.  AssertionError  ╨б╤В╤А╤Г╨║╤В╤Г╤А╨░ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╜╨░ ╤Б╨╛╨╛╤В╨▓╨╡╤В╤Б╤В╨▓╨╛╨▓╨░╤В╤М ╨╛╨╢╨╕╨┤╨░╨╡╨╝╨╛╨╣                                                                                                                                                                                                                                                                                                                                
+                      expected data to satisfy schema but found following errors:                                                                                                                                                                                                                                                                                                                      
+                      data should have required property 'id', data.username should be string, data should have required property 'first_name', data should have required property 'last_name', data.email should be string                                                                                                                                                                            
+                      at assertion:1 in test-script                                                                                                                                                                                                                                                                                                                                                    
+                      inside "register_and_get_tokens // No Auth / create_users / create_first_user"                                                                                                                                                                                                                                                                                                   
+[90m     [39m[90m                [39m[90m                                                                                                                                                                                                                                                                                                                                                                                  [39m
+ 03.  AssertionError  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 201                                                                                                                                                                                                                                                                                                                                                
+                      ╨г╨▒╨╡╨┤╨╕╤В╨╡╤Б╤М, ╤З╤В╨╛ ╨╖╨░╨┐╤А╨╛c ╨╜╨░ ╤А╨╡╨│╨╕╤Б╤В╤А╨░╤Ж╨╕╤О ╨╜╨╛╨▓╨╛╨│╨╛ ╨┐╨╛╨╗╤М╨╖╨╛╨▓╨░╤В╨╡╨╗╤П, ╤Б╨╛╨┤╨╡╤А╨╢╨░╤Й╨╕╨╣ ╨║╨╛╤А╤А╨╡╨║╤В╨╜╤Л╨╡ ╨┤╨░╨╜╨╜╤Л╨╡, ╨▓╨╛╨╖╨▓╤А╨░╤Й╨░╨╡╤В ╨╛╤В╨▓╨╡╤В ╤Б╨╛ ╤Б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤╨╛╨╝ 201: expected 'Bad Request' to deeply equal 'Created'                                                                                                                                                                                                   
+                      at assertion:0 in test-script                                                                                                                                                                                                                                                                                                                                                    
+                      inside "register_and_get_tokens // No Auth / create_users / create_second_user"                                                                                                                                                                                                                                                                                                  
+[90m     [39m[90m                [39m[90m                                                                                                                                                                                                                                                                                                                                                                                  [39m
+ 04.  AssertionError  ╨б╤В╤А╤Г╨║╤В╤Г╤А╨░ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╜╨░ ╤Б╨╛╨╛╤В╨▓╨╡╤В╤Б╤В╨▓╨╛╨▓╨░╤В╤М ╨╛╨╢╨╕╨┤╨░╨╡╨╝╨╛╨╣                                                                                                                                                                                                                                                                                                                                
+                      expected data to satisfy schema but found following errors:                                                                                                                                                                                                                                                                                                                      
+                      data should have required property 'id', data.username should be string, data should have required property 'first_name', data should have required property 'last_name', data.email should be string                                                                                                                                                                            
+                      at assertion:1 in test-script                                                                                                                                                                                                                                                                                                                                                    
+                      inside "register_and_get_tokens // No Auth / create_users / create_second_user"                                                                                                                                                                                                                                                                                                  
+[90m     [39m[90m                [39m[90m                                                                                                                                                                                                                                                                                                                                                                                  [39m
+ 05.  AssertionError  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 201                                                                                                                                                                                                                                                                                                                                                
+                      ╨г╨▒╨╡╨┤╨╕╤В╨╡╤Б╤М, ╤З╤В╨╛ ╨╖╨░╨┐╤А╨╛c ╨╜╨░ ╤А╨╡╨│╨╕╤Б╤В╤А╨░╤Ж╨╕╤О ╨╜╨╛╨▓╨╛╨│╨╛ ╨┐╨╛╨╗╤М╨╖╨╛╨▓╨░╤В╨╡╨╗╤П, ╤Б╨╛╨┤╨╡╤А╨╢╨░╤Й╨╕╨╣ ╨║╨╛╤А╤А╨╡╨║╤В╨╜╤Л╨╡ ╨┤╨░╨╜╨╜╤Л╨╡, ╨▓╨╛╨╖╨▓╤А╨░╤Й╨░╨╡╤В ╨╛╤В╨▓╨╡╤В ╤Б╨╛ ╤Б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤╨╛╨╝ 201: expected 'Bad Request' to deeply equal 'Created'                                                                                                                                                                                                   
+                      at assertion:0 in test-script                                                                                                                                                                                                                                                                                                                                                    
+                      inside "register_and_get_tokens // No Auth / create_users / create_third_user"                                                                                                                                                                                                                                                                                                   
+[90m     [39m[90m                [39m[90m                                                                                                                                                                                                                                                                                                                                                                                  [39m
+ 06.  AssertionError  ╨б╤В╤А╤Г╨║╤В╤Г╤А╨░ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╜╨░ ╤Б╨╛╨╛╤В╨▓╨╡╤В╤Б╤В╨▓╨╛╨▓╨░╤В╤М ╨╛╨╢╨╕╨┤╨░╨╡╨╝╨╛╨╣                                                                                                                                                                                                                                                                                                                                
+                      expected data to satisfy schema but found following errors:                                                                                                                                                                                                                                                                                                                      
+                      data should have required property 'id', data.username should be string, data should have required property 'first_name', data should have required property 'last_name', data.email should be string                                                                                                                                                                            
+                      at assertion:1 in test-script                                                                                                                                                                                                                                                                                                                                                    
+                      inside "register_and_get_tokens // No Auth / create_users / create_third_user"                                                                                                                                                                                                                                                                                                   
+[90m     [39m[90m                [39m[90m                                                                                                                                                                                                                                                                                                                                                                                  [39m
+ 07.  AssertionError  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 200                                                                                                                                                                                                                                                                                                                                                
+                      ╨Ч╨░╨┐╤А╨╛╤Б ╨╜╨╡╨╖╨░╤А╨╡╨│╨╕╤Б╤В╤А╨╕╤А╨╛╨▓╨░╨╜╨╜╨╛╨│╨╛ ╨┐╨╛╨╗╤М╨╖╨╛╨▓╨░╤В╨╡╨╗╤П ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▓╨╡╤А╨╜╤Г╤В╤М ╨╛╤В╨▓╨╡╤В ╤Б╨╛ ╤Б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤╨╛╨╝ 200: expected 'Not Found' to deeply equal 'OK'                                                                                                                                                                                                                                                    
+                      at assertion:0 in test-script                                                                                                                                                                                                                                                                                                                                                    
+                      inside "users / get_user_info / get_profile // No Auth"                                                                                                                                                                                                                                                                                                                          
+[90m     [39m[90m                [39m[90m                                                                                                                                                                                                                                                                                                                                                                                  [39m
+ 08.  AssertionError  ╨б╤В╤А╤Г╨║╤В╤Г╤А╨░ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╜╨░ ╤Б╨╛╨╛╤В╨▓╨╡╤В╤Б╤В╨▓╨╛╨▓╨░╤В╤М ╨╛╨╢╨╕╨┤╨░╨╡╨╝╨╛╨╣                                                                                                                                                                                                                                                                                                                                
+                      expected data to satisfy schema but found following errors:                                                                                                                                                                                                                                                                                                                      
+                      data should NOT have additional properties, data should have required property 'id', data should have required property 'username', data should have required property 'first_name', data should have required property 'last_name', data should have required property 'email', data should have required property 'is_subscribed', data should have required property 'avatar' 
+                      at assertion:1 in test-script                                                                                                                                                                                                                                                                                                                                                    
+                      inside "users / get_user_info / get_profile // No Auth"                                                                                                                                                                                                                                                                                                                          
+[90m     [39m[90m                [39m[90m                                                                                                                                                                                                                                                                                                                                                                                  [39m
+ 09.  AssertionError  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 200                                                                                                                                                                                                                                                                                                                                                
+                      ╨Ч╨░╨┐╤А╨╛╤Б ╨╖╨░╤А╨╡╨│╨╕╤Б╤В╤А╨╕╤А╨╛╨▓╨░╨╜╨╜╨╛╨│╨╛ ╨┐╨╛╨╗╤М╨╖╨╛╨▓╨░╤В╨╡╨╗╤П ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▓╨╡╤А╨╜╤Г╤В╤М ╨╛╤В╨▓╨╡╤В ╤Б╨╛ ╤Б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤╨╛╨╝ 200: expected 'Not Found' to deeply equal 'OK'                                                                                                                                                                                                                                                      
+                      at assertion:0 in test-script                                                                                                                                                                                                                                                                                                                                                    
+                      inside "users / get_user_info / get_profile // User"                                                                                                                                                                                                                                                                                                                             
+[90m     [39m[90m                [39m[90m                                                                                                                                                                                                                                                                                                                                                                                  [39m
+ 10.  AssertionError  ╨б╤В╤А╤Г╨║╤В╤Г╤А╨░ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╜╨░ ╤Б╨╛╨╛╤В╨▓╨╡╤В╤Б╤В╨▓╨╛╨▓╨░╤В╤М ╨╛╨╢╨╕╨┤╨░╨╡╨╝╨╛╨╣                                                                                                                                                                                                                                                                                                                                
+                      expected data to satisfy schema but found following errors:                                                                                                                                                                                                                                                                                                                      
+                      data should NOT have additional properties, data should have required property 'id', data should have required property 'username', data should have required property 'first_name', data should have required property 'last_name', data should have required property 'email', data should have required property 'is_subscribed', data should have required property 'avatar' 
+                      at assertion:1 in test-script                                                                                                                                                                                                                                                                                                                                                    
+                      inside "users / get_user_info / get_profile // User"                                                                                                                                                                                                                                                                                                                             
+[90m     [39m[90m                [39m[90m                                                                                                                                                                                                                                                                                                                                                                                  [39m
+ 11.  AssertionError  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 200                                                                                                                                                                                                                                                                                                                                                
+                      ╨Ч╨░╨┐╤А╨╛╤Б ╨╖╨░╤А╨╡╨│╨╕╤Б╤В╤А╨╕╤А╨╛╨▓╨░╨╜╨╜╨╛╨│╨╛ ╨┐╨╛╨╗╤М╨╖╨╛╨▓╨░╤В╨╡╨╗╤П ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▓╨╡╤А╨╜╤Г╤В╤М ╨╛╤В╨▓╨╡╤В ╤Б╨╛ ╤Б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤╨╛╨╝ 200: expected 'Bad Request' to deeply equal 'OK'                                                                                                                                                                                                                                                    
+                      at assertion:0 in test-script                                                                                                                                                                                                                                                                                                                                                    
+                      inside "recipes / get_recipes / get_recipes_list_with_author_param // User"                                                                                                                                                                                                                                                                                                      
+[90m     [39m[90m                [39m[90m                                                                                                                                                                                                                                                                                                                                                                                  [39m
+ 12.  AssertionError  ╨б╤В╤А╤Г╨║╤В╤Г╤А╨░ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╜╨░ ╤Б╨╛╨╛╤В╨▓╨╡╤В╤Б╤В╨▓╨╛╨▓╨░╤В╤М ╨╛╨╢╨╕╨┤╨░╨╡╨╝╨╛╨╣                                                                                                                                                                                                                                                                                                                                
+                      expected data to satisfy schema but found following errors:                                                                                                                                                                                                                                                                                                                      
+                      data should NOT have additional properties, data should have required property 'count', data should have required property 'next', data should have required property 'previous', data should have required property 'results'                                                                                                                                                   
+                      at assertion:1 in test-script                                                                                                                                                                                                                                                                                                                                                    
+                      inside "recipes / get_recipes / get_recipes_list_with_author_param // User"                                                                                                                                                                                                                                                                                                      
+[90m     [39m[90m                [39m[90m                                                                                                                                                                                                                                                                                                                                                                                  [39m
+ 13.  TypeError       ╨Ф╨╛╨╗╨╢╨╜╨░ ╨▒╤Л╤В╤М ╨▓╨╛╨╖╨╝╨╛╨╢╨╜╨╛╤Б╤В╤М ╤Д╨╕╨╗╤М╤В╤А╨░╤Ж╨╕╨╕ ╤А╨╡╤Ж╨╡╨┐╤В╨╛╨▓ ╤З╨╡╤А╨╡╨╖ ╨┐╨░╤А╨░╨╝╨╡╤В╤А ╨╖╨░╨┐╤А╨╛╤Б╨░ `author`                                                                                                                                                                                                                                                                                                      
+                      Cannot read properties of undefined (reading 'length')                                                                                                                                                                                                                                                                                                                           
+                      at assertion:2 in test-script                                                                                                                                                                                                                                                                                                                                                    
+                      inside "recipes / get_recipes / get_recipes_list_with_author_param // User"                                                                                                                                                                                                                                                                                                      
+[90m     [39m[90m                [39m[90m                                                                                                                                                                                                                                                                                                                                                                                  [39m
+ 14.  AssertionError  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 201                                                                                                                                                                                                                                                                                                                                                
+                      ╨Ч╨░╨┐╤А╨╛╤Б ╨╖╨░╤А╨╡╨│╨╕╤Б╤В╤А╨╕╤А╨╛╨▓╨░╨╜╨╜╨╛╨│╨╛ ╨┐╨╛╨╗╤М╨╖╨╛╨▓╨░╤В╨╡╨╗╤П ╨╜╨░ ╤Б╨╛╨╖╨┤╨░╨╜╨╕╨╡ ╨┐╨╛╨┤╨┐╨╕╤Б╨║╨╕ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▓╨╡╤А╨╜╤Г╤В╤М ╨╛╤В╨▓╨╡╤В ╤Б╨╛ ╤Б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤╨╛╨╝ 201: expected 'Internal Server Error' to deeply equal 'Created'                                                                                                                                                                                                                
+                      at assertion:0 in test-script                                                                                                                                                                                                                                                                                                                                                    
+                      inside "subscriptions / create_subscriptions / create_subscription // User"                                                                                                                                                                                                                                                                                                      
+[90m     [39m[90m                [39m[90m                                                                                                                                                                                                                                                                                                                                                                                  [39m
+ 15.  JSONError       ╨б╤В╤А╤Г╨║╤В╤Г╤А╨░ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╜╨░ ╤Б╨╛╨╛╤В╨▓╨╡╤В╤Б╤В╨▓╨╛╨▓╨░╤В╤М ╨╛╨╢╨╕╨┤╨░╨╡╨╝╨╛╨╣                                                                                                                                                                                                                                                                                                                                
+                      Unexpected token '<' at 2:1                                                                                                                                                                                                                                                                                                                                                      
+                      <!doctype html>                                                                                                                                                                                                                                                                                                                                                                  
+                      ^                                                                                                                                                                                                                                                                                                                                                                                
+                      at assertion:1 in test-script                                                                                                                                                                                                                                                                                                                                                    
+                      inside "subscriptions / create_subscriptions / create_subscription // User"                                                                                                                                                                                                                                                                                                      
+[90m     [39m[90m                [39m[90m                                                                                                                                                                                                                                                                                                                                                                                  [39m
+ 16.  AssertionError  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 201                                                                                                                                                                                                                                                                                                                                                
+                      ╨Ч╨░╨┐╤А╨╛╤Б ╨╖╨░╤А╨╡╨│╨╕╤Б╤В╤А╨╕╤А╨╛╨▓╨░╨╜╨╜╨╛╨│╨╛ ╨┐╨╛╨╗╤М╨╖╨╛╨▓╨░╤В╨╡╨╗╤П ╨╜╨░ ╤Б╨╛╨╖╨┤╨░╨╜╨╕╨╡ ╨┐╨╛╨┤╨┐╨╕╤Б╨║╨╕ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▓╨╡╤А╨╜╤Г╤В╤М ╨╛╤В╨▓╨╡╤В ╤Б╨╛ ╤Б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤╨╛╨╝ 201: expected 'Internal Server Error' to deeply equal 'Created'                                                                                                                                                                                                                
+                      at assertion:0 in test-script                                                                                                                                                                                                                                                                                                                                                    
+                      inside "subscriptions / create_subscriptions / create_subscription_with_recipes_limit_param // User"                                                                                                                                                                                                                                                                             
+[90m     [39m[90m                [39m[90m                                                                                                                                                                                                                                                                                                                                                                                  [39m
+ 17.  JSONError       ╨б╤В╤А╤Г╨║╤В╤Г╤А╨░ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╜╨░ ╤Б╨╛╨╛╤В╨▓╨╡╤В╤Б╤В╨▓╨╛╨▓╨░╤В╤М ╨╛╨╢╨╕╨┤╨░╨╡╨╝╨╛╨╣                                                                                                                                                                                                                                                                                                                                
+                      Unexpected token '<' at 2:1                                                                                                                                                                                                                                                                                                                                                      
+                      <!doctype html>                                                                                                                                                                                                                                                                                                                                                                  
+                      ^                                                                                                                                                                                                                                                                                                                                                                                
+                      at assertion:1 in test-script                                                                                                                                                                                                                                                                                                                                                    
+                      inside "subscriptions / create_subscriptions / create_subscription_with_recipes_limit_param // User"                                                                                                                                                                                                                                                                             
+[90m     [39m[90m                [39m[90m                                                                                                                                                                                                                                                                                                                                                                                  [39m
+ 18.  JSONError       ╨Ф╨╛╨╗╨╢╨╜╨░ ╨▒╤Л╤В╤М ╨▓╨╛╨╖╨╝╨╛╨╢╨╜╨╛╤Б╤В╤М ╨╕╨╖╨╝╨╡╨╜╨╕╤В╤М ╨║╨╛╨╗╨╕╤З╨╡╤Б╤В╨▓╨╛ ╨▓╤Л╨▓╨╛╨┤╨╕╨╝╤Л╤Е ╤А╨╡╤Ж╨╡╨┐╤В╨╛╨▓ ╨▓ ╨┤╨░╨╜╨╜╤Л╤Е ╨┐╨╛╨╗╤М╨╖╨╛╨▓╨░╤В╨╡╨╗╤П ╤З╨╡╤А╨╡╨╖ ╨┐╨░╤А╨░╨╝╨╡╤В╤А `recipes_limit`                                                                                                                                                                                                                                                              
+                      Unexpected token '<' at 2:1                                                                                                                                                                                                                                                                                                                                                      
+                      <!doctype html>                                                                                                                                                                                                                                                                                                                                                                  
+                      ^                                                                                                                                                                                                                                                                                                                                                                                
+                      at assertion:2 in test-script                                                                                                                                                                                                                                                                                                                                                    
+                      inside "subscriptions / create_subscriptions / create_subscription_with_recipes_limit_param // User"                                                                                                                                                                                                                                                                             
+[90m     [39m[90m                [39m[90m                                                                                                                                                                                                                                                                                                                                                                                  [39m
+ 19.  AssertionError  ╨Ф╨╛╨╗╨╢╨╜╨░ ╨▒╤Л╤В╤М ╨▓╨╛╨╖╨╝╨╛╨╢╨╜╨╛╤Б╤В╤М ╨╕╨╖╨╝╨╡╨╜╨╕╤В╤М ╨║╨╛╨╗╨╕╤З╨╡╤Б╤В╨▓╨╛ ╨╛╨▒╤К╨╡╨║╤В╨╛╨▓ ╨╜╨░ ╤Б╤В╤А╨░╨╜╨╕╤Ж╨╡ ╤З╨╡╤А╨╡╨╖ ╨┐╨░╤А╨░╨╝╨╡╤В╤А ╨╖╨░╨┐╤А╨╛╤Б╨░ `limit`                                                                                                                                                                                                                                                                                  
+                      ╨г╨▒╨╡╨┤╨╕╤В╨╡╤Б╤М, ╤З╤В╨╛ ╤Б ╨┐╨╛╨╝╨╛╤Й╤М╤О ╨┐╨░╤А╨░╨╝╨╡╤В╤А╨░ ╨╖╨░╨┐╤А╨╛╤Б╨░ `limit` ╨╝╨╛╨╢╨╜╨╛ ╨╕╨╖╨╝╨╡╨╜╤П╤В╤М ╨║╨╛╨╗╨╕╤З╨╡╤Б╤В╨▓╨╛ ╨╛╨▒╤К╨╡╨║╤В╨╛╨▓ ╨╜╨░ ╤Б╤В╤А╨░╨╜╨╕╤Ж╨╡ ╨┐╨░╨│╨╕╨╜╨░╤В╨╛╤А╨░: expected +0 to deeply equal 1                                                                                                                                                                                                                                      
+                      at assertion:2 in test-script                                                                                                                                                                                                                                                                                                                                                    
+                      inside "subscriptions / get_subscriptions / get_subscription_list_with_limit_param // User"                                                                                                                                                                                                                                                                                      
+[90m     [39m[90m                [39m[90m                                                                                                                                                                                                                                                                                                                                                                                  [39m
+ 20.  AssertionError  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 400                                                                                                                                                                                                                                                                                                                                                
+                      ╨Я╤А╨╕ ╨┐╨╛╨┐╤Л╤В╨║╨╡ ╤Б╨╛╨╖╨┤╨░╨╜╨╕╤П ╨┤╤Г╨▒╨╗╨╕╤А╤Г╤О╤Й╨╡╨╣╤Б╤П ╨┐╨╛╨┤╨┐╨╕╤Б╨║╨╕ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▓╨╡╤А╨╜╤Г╤В╤М╤Б╤П ╨╛╤В╨▓╨╡╤В ╤Б╨╛ ╤Б╤В╨░╤В╤Г╤Б╨╛╨╝ 400: expected 'Internal Server Error' to deeply equal 'Bad Request'                                                                                                                                                                                                                               
+                      at assertion:0 in test-script                                                                                                                                                                                                                                                                                                                                                    
+                      inside "subscriptions / subscription_bad_requests / create_duplicated_subscription // User"                                                                                                                                                                                                                                                                                      
+[90m     [39m[90m                [39m[90m                                                                                                                                                                                                                                                                                                                                                                                  [39m
+ 21.  AssertionError  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 400                                                                                                                                                                                                                                                                                                                                                
+                      ╨Я╤А╨╕ ╨┐╨╛╨┐╤Л╤В╨║╨╡ ╤Б╨╛╨╖╨┤╨░╨╜╨╕╤П ╨┐╨╛╨┤╨┐╨╕╤Б╨║╨╕ ╨╜╨░ ╤Б╨░╨╝╨╛╨│╨╛ ╤Б╨╡╨▒╤П ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▓╨╡╤А╨╜╤Г╤В╤М╤Б╤П ╨╛╤В╨▓╨╡╤В ╤Б╨╛ ╤Б╤В╨░╤В╤Г╤Б╨╛╨╝ 400: expected 'Internal Server Error' to deeply equal 'Bad Request'                                                                                                                                                                                                                              
+                      at assertion:0 in test-script                                                                                                                                                                                                                                                                                                                                                    
+                      inside "subscriptions / subscription_bad_requests / create_self_subscription // User"                                                                                                                                                                                                                                                                                            
+[90m     [39m[90m                [39m[90m                                                                                                                                                                                                                                                                                                                                                                                  [39m
+ 22.  AssertionError  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 400                                                                                                                                                                                                                                                                                                                                                
+                      ╨Я╤А╨╕ ╨┐╨╛╨┐╤Л╤В╨║╨╡ ╨┐╨╛╨╗╤М╨╖╨╛╨▓╨░╤В╨╡╨╗╤П ╤Г╨┤╨░╨╗╨╕╤В╤М ╨╜╨╡╤Б╤Г╤Й╨╡╤Б╤В╨▓╤Г╤О╤Й╤Г╤О ╨┐╨╛╨┤╨┐╨╕╤Б╨║╤Г ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▓╨╡╤А╨╜╤Г╤В╤М╤Б╤П ╨╛╤В╨▓╨╡╤В ╤Б╨╛ ╤Б╤В╨░╤В╤Г╤Б╨╛╨╝ 400: expected 'Internal Server Error' to deeply equal 'Bad Request'                                                                                                                                                                                                                  
+                      at assertion:0 in test-script                                                                                                                                                                                                                                                                                                                                                    
+                      inside "delete_requests / subscriptions / bad_requests / delete_non_existing_subscription // Second User"                                                                                                                                                                                                                                                                        
+[90m     [39m[90m                [39m[90m                                                                                                                                                                                                                                                                                                                                                                                  [39m
+ 23.  AssertionError  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 204                                                                                                                                                                                                                                                                                                                                                
+                      ╨Ч╨░╨┐╤А╨╛╤Б ╨╖╨░╤А╨╡╨│╨╕╤Б╤В╤А╨╕╤А╨╛╨▓╨░╨╜╨╜╨╛╨│╨╛ ╨┐╨╛╨╗╤М╨╖╨╛╨▓╨░╤В╨╡╨╗╤П ╨╜╨░ ╤Г╨┤╨░╨╗╨╡╨╜╨╕╨╡ ╤Б╤Г╤Й╨╡╤Б╤В╨▓╤Г╤О╤Й╨╡╨╣ ╨┐╨╛╨┤╨┐╨╕╤Б╨║╨╕ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▓╨╡╤А╨╜╤Г╤В╤М ╨╛╤В╨▓╨╡╤В ╤Б╨╛ ╤Б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤╨╛╨╝ 204: expected 'Internal Server Error' to deeply equal 'No Content'                                                                                                                                                                                                
+                      at assertion:0 in test-script                                                                                                                                                                                                                                                                                                                                                    
+                      inside "delete_requests / subscriptions / delete_first_subscription // User"                                                                                                                                                                                                                                                                                                     
+[90m     [39m[90m                [39m[90m                                                                                                                                                                                                                                                                                                                                                                                  [39m
+ 24.  AssertionError  ╨б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤ ╨╛╤В╨▓╨╡╤В╨░ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▒╤Л╤В╤М 204                                                                                                                                                                                                                                                                                                                                                
+                      ╨Ч╨░╨┐╤А╨╛╤Б ╨╖╨░╤А╨╡╨│╨╕╤Б╤В╤А╨╕╤А╨╛╨▓╨░╨╜╨╜╨╛╨│╨╛ ╨┐╨╛╨╗╤М╨╖╨╛╨▓╨░╤В╨╡╨╗╤П ╨╜╨░ ╤Г╨┤╨░╨╗╨╡╨╜╨╕╨╡ ╤Б╤Г╤Й╨╡╤Б╤В╨▓╤Г╤О╤Й╨╡╨╣ ╨┐╨╛╨┤╨┐╨╕╤Б╨║╨╕ ╨┤╨╛╨╗╨╢╨╡╨╜ ╨▓╨╡╤А╨╜╤Г╤В╤М ╨╛╤В╨▓╨╡╤В ╤Б╨╛ ╤Б╤В╨░╤В╤Г╤Б-╨║╨╛╨┤╨╛╨╝ 204: expected 'Internal Server Error' to deeply equal 'No Content'                                                                                                                                                                                                
+                      at assertion:0 in test-script                                                                                                                                                                                                                                                                                                                                                    
+                      inside "delete_requests / subscriptions / delete_second_subscription // User"                                                                                                                                                                                                                                                                                                    

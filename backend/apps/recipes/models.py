@@ -6,7 +6,7 @@ User = get_user_model()
 
 
 class Tag(models.Model):
-    """Модель тега для рецептов (Завтрак, Обед, Ужин и т.д.)."""
+    """Модель тега для рецептов."""
 
     name = models.CharField(
         'Название тега',
@@ -20,9 +20,9 @@ class Tag(models.Model):
         validators=[
             RegexValidator(
                 regex=r'^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$',
-                message='Поле должно содержать валидный HEX-код цвета.'
+                message='Поле должно содержать валидный HEX-код цвета.',
             )
-        ]
+        ],
     )
     slug = models.SlugField(
         'Уникальный слаг',
@@ -58,8 +58,8 @@ class Ingredient(models.Model):
         constraints = [
             models.UniqueConstraint(
                 fields=['name', 'measurement_unit'],
-                name='unique_ingredient_name_unit'
-            )
+                name='unique_ingredient_name_unit',
+            ),
         ]
 
     def __str__(self) -> str:
@@ -67,7 +67,7 @@ class Ingredient(models.Model):
 
 
 class Recipe(models.Model):
-    """Модель рецепта — центральная сущность системы."""
+    """Модель рецепта."""
 
     author = models.ForeignKey(
         User,
@@ -101,9 +101,10 @@ class Recipe(models.Model):
         'Время приготовления (в минутах)',
         validators=[
             MinValueValidator(
-                1, message='Время приготовления не может быть меньше 1 минуты.'
+                1,
+                message='Время приготовления не может быть меньше 1 минуты.',
             )
-        ]
+        ],
     )
     pub_date = models.DateTimeField(
         'Дата публикации',
@@ -113,7 +114,6 @@ class Recipe(models.Model):
     class Meta:
         verbose_name = 'Рецепт'
         verbose_name_plural = 'Рецепты'
-        # Требование ТЗ: новые рецепты должны быть выше в списке
         ordering = ['-pub_date']
 
     def __str__(self) -> str:
@@ -121,9 +121,7 @@ class Recipe(models.Model):
 
 
 class RecipeIngredient(models.Model):
-    """
-    Промежуточная таблица, связывающая Рецепт и Ингредиент (с количеством).
-    """
+    """Связь рецепта с ингредиентом и его количеством."""
 
     recipe = models.ForeignKey(
         Recipe,
@@ -141,21 +139,20 @@ class RecipeIngredient(models.Model):
         'Количество',
         validators=[
             MinValueValidator(
-                1, message='Количество ингредиента не может быть меньше 1.'
+                1,
+                message='Количество ингредиента не может быть меньше 1.',
             )
-        ]
+        ],
     )
 
     class Meta:
         verbose_name = 'Ингредиент в рецепте'
         verbose_name_plural = 'Ингредиенты в рецептах'
         constraints = [
-            # DRY защита
-            # нельзя добавить один и тот же ингредиент в рецепт дважды
             models.UniqueConstraint(
                 fields=['recipe', 'ingredient'],
-                name='unique_recipe_ingredient'
-            )
+                name='unique_recipe_ingredient',
+            ),
         ]
 
     def __str__(self) -> str:
@@ -163,7 +160,7 @@ class RecipeIngredient(models.Model):
 
 
 class UserRecipeRelation(models.Model):
-    """Абстрактная базовая модель для Избранного и Списка покупок (DRY)."""
+    """Абстрактная модель для избранного и корзины."""
 
     user = models.ForeignKey(
         User,
@@ -184,22 +181,22 @@ class UserRecipeRelation(models.Model):
 
 
 class Favorite(UserRecipeRelation):
-    """Модель избранных рецептов для пользователя."""
+    """Модель избранных рецептов."""
 
     class Meta(UserRecipeRelation.Meta):
         verbose_name = 'Избранный рецепт'
         verbose_name_plural = 'Избранные рецепты'
-        default_related_name = 'favorites'
+        default_related_name = 'favorite'
         constraints = [
             models.UniqueConstraint(
                 fields=['user', 'recipe'],
-                name='unique_favorite_recipe'
-            )
+                name='unique_favorite_recipe',
+            ),
         ]
 
 
 class ShoppingCart(UserRecipeRelation):
-    """Модель списка покупок пользователя."""
+    """Модель списка покупок."""
 
     class Meta(UserRecipeRelation.Meta):
         verbose_name = 'Рецепт в списке покупок'
@@ -208,6 +205,6 @@ class ShoppingCart(UserRecipeRelation):
         constraints = [
             models.UniqueConstraint(
                 fields=['user', 'recipe'],
-                name='unique_shopping_cart_recipe'
-            )
+                name='unique_shopping_cart_recipe',
+            ),
         ]

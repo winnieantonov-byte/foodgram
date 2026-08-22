@@ -1,19 +1,19 @@
 import os
 import sys
 from pathlib import Path
+
 from django.core.management.utils import get_random_secret_key
 
-# Базовая директория проекта (backend/)
+# Базовая директория проекта
 BASE_DIR = Path(__file__).resolve().parent.parent
 sys.path.insert(0, os.path.join(BASE_DIR, 'apps'))
-# В продакшене это будет браться из .env (DRY / Twelve-Factor App)
+
+# Безопасность
 SECRET_KEY = os.getenv('SECRET_KEY', default=get_random_secret_key())
-
 DEBUG = os.getenv('DEBUG', 'False').lower() in ('true', '1', 't')
-
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '127.0.0.1,localhost').split(',')
 
-# Конфигурация приложений
+# Приложения
 SYSTEM_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -66,9 +66,9 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'foodgram.wsgi'
+WSGI_APPLICATION = 'foodgram.wsgi.application'
 
-# База данных: В тестах используем sqlite в памяти, на проде — PostgreSQL
+# База данных
 if os.getenv('DB_ENGINE') == 'postgresql':
     DATABASES = {
         'default': {
@@ -88,16 +88,26 @@ else:
         }
     }
 
-# Кастомная модель пользователя (Связываем с созданным ранее кодом)
+# Пользователи
 AUTH_USER_MODEL = 'users.User'
 
+# Валидация паролей
 AUTH_PASSWORD_VALIDATORS = [
-    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
-    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
-    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator'},
-    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
+    {
+        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+    },
 ]
 
+# Интернационализация
 LANGUAGE_CODE = 'ru-ru'
 TIME_ZONE = 'UTC'
 USE_I18N = True
@@ -105,16 +115,13 @@ USE_TZ = True
 
 # Статика и медиа
 STATIC_URL = 'static/'
-
-STATIC_ROOT = BASE_DIR / 'static' / 'static'
-
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 MEDIA_URL = 'media/'
-
 MEDIA_ROOT = BASE_DIR / 'media'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# Настройки Django REST Framework
+# Django REST Framework
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.AllowAny',
@@ -122,19 +129,20 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
     ],
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
     'PAGE_SIZE': 6,
 }
 
-# Настройки Djoser (для авторизации, регистрации и смены пароля)
+# Djoser
 DJOSER = {
     'LOGIN_FIELD': 'email',
     'HIDE_USERS': False,
     'PERMISSIONS': {
-        'user': ['rest_framework.permissions.IsAuthenticated'],
+        'user': ['rest_framework.permissions.AllowAny'],
         'user_list': ['rest_framework.permissions.AllowAny'],
     },
     'SERIALIZERS': {
+        'user_create': 'api.serializers.CustomUserCreateSerializer',
         'user': 'api.serializers.CustomUserSerializer',
         'current_user': 'api.serializers.CustomUserSerializer',
     },
