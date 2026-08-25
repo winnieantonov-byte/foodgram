@@ -22,7 +22,8 @@ from api.serializers import (
     TagSerializer,
     AvatarSerializer,
 )
-from apps.recipes.models import Favorite, Ingredient, Recipe, RecipeIngredient, ShoppingCart, Tag
+from apps.recipes.models import Favorite, Ingredient, Recipe
+from apps.recipes.models import RecipeIngredient, ShoppingCart, Tag
 from apps.users.models import Subscription
 
 User = get_user_model()
@@ -121,7 +122,9 @@ class CustomUserViewSet(UserViewSet):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        serializer = SubscriptionSerializer(author, context={"request": request})
+        serializer = SubscriptionSerializer(
+            author, context={"request": request}
+        )
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     def _delete_subscription(self, user, author) -> Response:
@@ -195,7 +198,9 @@ class RecipeViewSet(viewsets.ModelViewSet):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        serializer = CompactRecipeSerializer(recipe, context={"request": request})
+        serializer = CompactRecipeSerializer(
+            recipe, context={"request": request}
+        )
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     def _remove_relation(self, model, user, recipe) -> Response:
@@ -277,8 +282,12 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
         file_content = self._build_shopping_cart_content(user, ingredients)
 
-        response = HttpResponse(file_content, content_type="text/plain; charset=utf-8")
-        response["Content-Disposition"] = 'attachment; filename="shopping_cart.txt"'
+        response = HttpResponse(
+            file_content, content_type="text/plain; charset=utf-8"
+        )
+        response["Content-Disposition"] = (
+            'attachment; filename="shopping_cart.txt"'
+        )
         return response
 
     def _build_shopping_cart_content(self, user, ingredients) -> str:

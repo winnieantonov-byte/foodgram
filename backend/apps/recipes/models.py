@@ -105,7 +105,9 @@ class Recipe(models.Model):
             ),
             MaxValueValidator(
                 MAX_COOKING_TIME,
-                message=f'Время приготовления не может превышать {MAX_COOKING_TIME} минут.',
+                message=(
+                    f'Время приготовления не может б. {MAX_COOKING_TIME}минут.'
+                ),
             ),
         ],
     )
@@ -143,18 +145,20 @@ class RecipeIngredient(models.Model):
         validators=[
             MinValueValidator(
                 1,
-                message='Количество ингредиента не может быть меньше 1.',
+                message='Количество инг. не может быть меньше 1.',
             ),
             MaxValueValidator(
                 MAX_INGREDIENT_AMOUNT,
-                message=f'Количество ингредиента не может превышать {MAX_INGREDIENT_AMOUNT}.',
+                message=(
+                    f'Количество инг. не может больше {MAX_INGREDIENT_AMOUNT}.'
+                ),
             ),
         ],
     )
 
     class Meta:
-        verbose_name = 'Ингредиент в рецепте'
-        verbose_name_plural = 'Ингредиенты в рецептах'
+        verbose_name = 'Инг. в рецепте'
+        verbose_name_plural = 'Инг. в рецептах'
         constraints = [
             models.UniqueConstraint(
                 fields=['recipe', 'ingredient'],

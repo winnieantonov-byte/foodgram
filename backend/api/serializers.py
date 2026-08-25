@@ -1,5 +1,3 @@
-from typing import Any, Dict, List
-
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
@@ -23,13 +21,17 @@ class UserSerializer(serializers.ModelSerializer):
             'last_name', 'is_subscribed', 'avatar',
         )
 
-    def get_is_subscribed(self, obj: User) -> bool:
+    def get_is_subscribed(self, obj):
+        """Проверяет, подписан ли текущий пользователь на автора."""
         request = self.context.get('request')
         if not request or request.user.is_anonymous:
             return False
-        return Subscription.objects.filter(user=request.user, author=obj).exists()
+        return Subscription.objects.filter(
+            user=request.user, author=obj
+        ).exists()
 
-    def get_avatar(self, obj: User) -> str | None:
+    def get_avatar(self, obj):
+        """Возвращает URL аватара пользователя."""
         if obj.avatar:
             return obj.avatar.url
         return None
@@ -39,13 +41,18 @@ class SubscriptionSerializer(UserSerializer):
     """Сериализатор для подписок с рецептами автора."""
 
     recipes = serializers.SerializerMethodField()
-    recipes_count = serializers.IntegerField(source='recipes.count', read_only=True)
+    recipes_count = serializers.IntegerField(
+        source='recipes.count', read_only=True
+    )
 
     class Meta(UserSerializer.Meta):
         fields = UserSerializer.Meta.fields + ('recipes', 'recipes_count')
-        read_only_fields = ('email', 'username', 'first_name', 'last_name', 'avatar')
+        read_only_fields = (
+            'email', 'username', 'first_name', 'last_name', 'avatar'
+        )
 
-    def get_recipes(self, obj: User) -> List[Dict[str, Any]]:
+    def get_recipes(self, obj):
+        """Возвращает рецепты автора с учетом параметра recipes_limit."""
         request = self.context.get('request')
         recipes = obj.recipes.all()
 
@@ -83,7 +90,9 @@ class RecipeIngredientSerializer(serializers.ModelSerializer):
         source='ingredient',
     )
     name = serializers.ReadOnlyField(source='ingredient.name')
-    measurement_unit = serializers.ReadOnlyField(source='ingredient.measurement_unit')
+    measurement_unit = serializers.ReadOnlyField(
+        source='ingredient.measurement_unit'
+    )
 
     class Meta:
         model = RecipeIngredient
@@ -100,7 +109,8 @@ class CompactRecipeSerializer(serializers.ModelSerializer):
         fields = ('id', 'name', 'image', 'cooking_time')
         read_only_fields = ('id', 'name', 'image', 'cooking_time')
 
-    def get_image(self, obj: Recipe) -> str | None:
+    def get_image(self, obj):
+        """Возвращает URL изображения рецепта."""
         if obj.image:
             return obj.image.url
         return None
@@ -126,7 +136,8 @@ class RecipeReadSerializer(serializers.ModelSerializer):
             'name', 'image', 'text', 'cooking_time',
         )
 
-    def get_image(self, obj: Recipe) -> str | None:
+    def get_image(self, obj):
+        """Возвращает URL изображения рецепта."""
         if obj.image:
             return obj.image.url
         return None
@@ -143,7 +154,9 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Recipe
-        fields = ('ingredients', 'tags', 'image', 'name', 'text', 'cooking_time')
+        fields = (
+            'ingredients', 'tags', 'image', 'name', 'text', 'cooking_time'
+        )
 
     def validate_image(self, value):
         """Проверяет наличие изображения."""
@@ -178,7 +191,7 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
 
         return data
 
-    def _save_ingredients(self, recipe: Recipe, ingredients_data: List[Dict[str, Any]]) -> None:
+    def _save_ingredients(self, recipe, ingredients_data):
         """Сохраняет ингредиенты для рецепта."""
         RecipeIngredient.objects.bulk_create([
             RecipeIngredient(
@@ -189,6 +202,7 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
         ])
 
     def create(self, validated_data):
+        """Создает новый рецепт."""
         ingredients_data = validated_data.pop('ingredients')
         tags_data = validated_data.pop('tags')
 
@@ -201,6 +215,7 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
         return recipe
 
     def update(self, instance, validated_data):
+        """Обновляет существующий рецепт."""
         ingredients_data = validated_data.pop('ingredients', None)
         tags_data = validated_data.pop('tags', None)
 
@@ -215,6 +230,7 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
         return super().update(instance, validated_data)
 
     def to_representation(self, instance):
+        """Возвращает сериализованное представление рецепта."""
         return RecipeReadSerializer(instance, context=self.context).data
 
 
