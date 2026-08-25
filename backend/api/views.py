@@ -248,7 +248,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
     @action(
         detail=False,
         methods=["get"],
-        url_path="short-link/(?P<recipe_id>\d+)",
+        url_path=r"short-link/(?P<recipe_id>\d+)",
         permission_classes=[AllowAny],
     )
     def redirect_short_link(
