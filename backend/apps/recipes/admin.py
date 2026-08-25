@@ -55,7 +55,7 @@ class IngredientAdmin(admin.ModelAdmin):
 class TagAdmin(admin.ModelAdmin):
     """Настройка отображения тегов в админке."""
 
-    list_display = ('id', 'name', 'color', 'slug')
+    list_display = ('id', 'name', 'slug')
     search_fields = ('name', 'slug')
 
 

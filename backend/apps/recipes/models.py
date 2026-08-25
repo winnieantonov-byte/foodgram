@@ -1,6 +1,16 @@
 from django.contrib.auth import get_user_model
-from django.core.validators import MinValueValidator, RegexValidator
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
+
+from apps.recipes.constants import (
+    INGREDIENT_MAX_LENGTH,
+    INGREDIENT_UNIT_MAX_LENGTH,
+    MAX_COOKING_TIME,
+    MAX_INGREDIENT_AMOUNT,
+    RECIPE_NAME_MAX_LENGTH,
+    SLUG_MAX_LENGTH,
+    TAG_NAME_MAX_LENGTH,
+)
 
 User = get_user_model()
 
@@ -10,23 +20,12 @@ class Tag(models.Model):
 
     name = models.CharField(
         'Название тега',
-        max_length=200,
+        max_length=TAG_NAME_MAX_LENGTH,
         unique=True,
-    )
-    color = models.CharField(
-        'Цвет в HEX',
-        max_length=7,
-        unique=True,
-        validators=[
-            RegexValidator(
-                regex=r'^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$',
-                message='Поле должно содержать валидный HEX-код цвета.',
-            )
-        ],
     )
     slug = models.SlugField(
         'Уникальный слаг',
-        max_length=200,
+        max_length=SLUG_MAX_LENGTH,
         unique=True,
     )
 
@@ -44,11 +43,11 @@ class Ingredient(models.Model):
 
     name = models.CharField(
         'Название ингредиента',
-        max_length=200,
+        max_length=INGREDIENT_MAX_LENGTH,
     )
     measurement_unit = models.CharField(
         'Единица измерения',
-        max_length=200,
+        max_length=INGREDIENT_UNIT_MAX_LENGTH,
     )
 
     class Meta:
@@ -77,7 +76,7 @@ class Recipe(models.Model):
     )
     name = models.CharField(
         'Название рецепта',
-        max_length=200,
+        max_length=RECIPE_NAME_MAX_LENGTH,
     )
     image = models.ImageField(
         'Изображение рецепта',
@@ -103,7 +102,11 @@ class Recipe(models.Model):
             MinValueValidator(
                 1,
                 message='Время приготовления не может быть меньше 1 минуты.',
-            )
+            ),
+            MaxValueValidator(
+                MAX_COOKING_TIME,
+                message=f'Время приготовления не может превышать {MAX_COOKING_TIME} минут.',
+            ),
         ],
     )
     pub_date = models.DateTimeField(
@@ -141,7 +144,11 @@ class RecipeIngredient(models.Model):
             MinValueValidator(
                 1,
                 message='Количество ингредиента не может быть меньше 1.',
-            )
+            ),
+            MaxValueValidator(
+                MAX_INGREDIENT_AMOUNT,
+                message=f'Количество ингредиента не может превышать {MAX_INGREDIENT_AMOUNT}.',
+            ),
         ],
     )
 
@@ -190,7 +197,7 @@ class Favorite(UserRecipeRelation):
         constraints = [
             models.UniqueConstraint(
                 fields=['user', 'recipe'],
-                name='unique_favorite_recipe',
+                name='%(app_label)s_%(class)s_unique',
             ),
         ]
 
@@ -205,6 +212,6 @@ class ShoppingCart(UserRecipeRelation):
         constraints = [
             models.UniqueConstraint(
                 fields=['user', 'recipe'],
-                name='unique_shopping_cart_recipe',
+                name='%(app_label)s_%(class)s_unique',
             ),
         ]

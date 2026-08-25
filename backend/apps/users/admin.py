@@ -1,11 +1,14 @@
 from django.contrib import admin
+from django.contrib.auth import get_user_model
 from django.contrib.auth.admin import UserAdmin
 
-from apps.users.models import Subscription, User
+from apps.users.models import Subscription
+
+User = get_user_model()
 
 
 @admin.register(User)
-class CustomUserAdmin(UserAdmin):
+class UserAdminConfig(UserAdmin):
     """Настройка отображения пользователей в админке."""
 
     list_display = (
@@ -13,7 +16,7 @@ class CustomUserAdmin(UserAdmin):
     )
     search_fields = ('username', 'email')
     list_filter = ('is_staff', 'is_active')
-    ordering = ('id',)
+    ordering = ('username',)
 
 
 @admin.register(Subscription)

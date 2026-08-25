@@ -1,16 +1,15 @@
-import base64
 from django.contrib.auth import get_user_model
-from django.core.files.base import ContentFile
 from django.db.models import Sum
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from djoser.views import UserViewSet
-from rest_framework import serializers, status, viewsets
+from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.request import Request
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 from api.filters import IngredientFilter, RecipeFilter
 from api.permissions import IsAuthorOrReadOnly
@@ -21,39 +20,24 @@ from api.serializers import (
     RecipeWriteSerializer,
     SubscriptionSerializer,
     TagSerializer,
+    AvatarSerializer,
 )
-from apps.recipes.models import Favorite, Ingredient, Recipe
-from apps.recipes.models import RecipeIngredient, ShoppingCart, Tag
+from apps.recipes.models import Favorite, Ingredient, Recipe, RecipeIngredient, ShoppingCart, Tag
 from apps.users.models import Subscription
 
 User = get_user_model()
 
 
-class Base64ImageField(serializers.ImageField):
-    """Поле для декодирования изображений из Base64."""
-
-    def to_internal_value(self, data):
-        if isinstance(data, str) and data.startswith('data:image'):
-            format, imgstr = data.split(';base64,')
-            ext = format.split('/')[-1]
-            data = ContentFile(base64.b64decode(imgstr), name=f'temp.{ext}')
-        return super().to_internal_value(data)
-
-
 class CustomUserViewSet(UserViewSet):
     """Вьюсет пользователей с подписками и управлением аватаром."""
+
     @action(
         ["get", "put", "patch", "delete"],
         detail=False,
-        permission_classes=[IsAuthenticated]
+        permission_classes=[IsAuthenticated],
     )
     def me(self, request, *args, **kwargs):
-        """Обработка эндпоинта /me с защитой от анонимных пользователей."""
-        if request.user.is_anonymous:
-            return Response(
-                {"detail": "Учетные данные не были предоставлены."},
-                status=status.HTTP_401_UNAUTHORIZED,
-            )
+        """Обработка эндпоинта /me."""
         return super().me(request, *args, **kwargs)
 
     @action(
@@ -72,27 +56,10 @@ class CustomUserViewSet(UserViewSet):
 
     def _update_avatar(self, user, request: Request) -> Response:
         """Обработка загрузки аватара."""
-        if "avatar" not in request.data or not request.data["avatar"]:
-            return Response(
-                {"avatar": "Это поле обязательно и не должно быть пустым."},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
-        class AvatarSerializer(serializers.ModelSerializer):
-            avatar = Base64ImageField(required=True)
-
-            class Meta:
-                model = User
-                fields = ("avatar",)
-
         serializer = AvatarSerializer(user, data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
-
-        return Response(
-            {"avatar": request.build_absolute_uri(user.avatar.url)},
-            status=status.HTTP_200_OK,
-        )
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     def _delete_avatar(self, user) -> Response:
         """Обработка удаления аватара."""
@@ -144,29 +111,31 @@ class CustomUserViewSet(UserViewSet):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        if Subscription.objects.filter(user=user, author=author).exists():
+        subscription, created = Subscription.objects.get_or_create(
+            user=user, author=author
+        )
+
+        if not created:
             return Response(
                 {"errors": "Вы уже подписаны на этого автора."},
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        Subscription.objects.create(user=user, author=author)
-        serializer = SubscriptionSerializer(
-            author, context={"request": request}
-        )
+        serializer = SubscriptionSerializer(author, context={"request": request})
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     def _delete_subscription(self, user, author) -> Response:
         """Обработка удаления подписки."""
-        subscription = Subscription.objects.filter(user=user, author=author)
+        deleted, _ = Subscription.objects.filter(
+            user=user, author=author
+        ).delete()
 
-        if not subscription.exists():
+        if not deleted:
             return Response(
                 {"errors": "Вы не подписаны на этого автора."},
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        subscription.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
@@ -177,12 +146,6 @@ class TagViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = TagSerializer
     permission_classes = [AllowAny]
     pagination_class = None
-
-    def list(self, request, *args, **kwargs):
-        """Возвращает список тегов без пагинации."""
-        queryset = self.get_queryset()
-        serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class IngredientViewSet(viewsets.ReadOnlyModelViewSet):
@@ -195,18 +158,12 @@ class IngredientViewSet(viewsets.ReadOnlyModelViewSet):
     filterset_class = IngredientFilter
     pagination_class = None
 
-    def list(self, request, *args, **kwargs):
-        """Возвращает список ингредиентов без пагинации."""
-        queryset = self.filter_queryset(self.get_queryset())
-        serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
 
 class RecipeViewSet(viewsets.ModelViewSet):
     """Вьюсет для CRUD операций с рецептами."""
 
     queryset = Recipe.objects.all()
-    permission_classes = [IsAuthorOrReadOnly]
+    permission_classes = [IsAuthenticatedOrReadOnly, IsAuthorOrReadOnly]
     filter_backends = (DjangoFilterBackend,)
     filterset_class = RecipeFilter
 
@@ -216,24 +173,11 @@ class RecipeViewSet(viewsets.ModelViewSet):
             return RecipeReadSerializer
         return RecipeWriteSerializer
 
-    def _validate_pk(self, pk: int) -> int:
-        """Проверяет и возвращает целочисленный первичный ключ."""
-        if pk is None or not str(pk).isdigit():
-            return None
-        return int(pk)
-
     def _manage_relation(
-        self, request: Request, model, pk: int = None
+        self, request: Request, model, pk: int
     ) -> Response:
         """Общий обработчик для избранного и корзины покупок."""
-        validated_pk = self._validate_pk(pk)
-        if validated_pk is None:
-            return Response(
-                {"errors": "Рецепт не найден (невалидный ID)."},
-                status=status.HTTP_404_NOT_FOUND,
-            )
-
-        recipe = get_object_or_404(Recipe, id=validated_pk)
+        recipe = get_object_or_404(Recipe, id=pk)
         user = request.user
 
         if request.method == "POST":
@@ -243,29 +187,27 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
     def _add_relation(self, model, user, recipe, request: Request) -> Response:
         """Добавляет рецепт в избранное или корзину пользователя."""
-        if model.objects.filter(user=user, recipe=recipe).exists():
+        _, created = model.objects.get_or_create(user=user, recipe=recipe)
+
+        if not created:
             return Response(
                 {"errors": "Рецепт уже добавлен в этот список."},
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        model.objects.create(user=user, recipe=recipe)
-        serializer = CompactRecipeSerializer(
-            recipe, context={"request": request}
-        )
+        serializer = CompactRecipeSerializer(recipe, context={"request": request})
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     def _remove_relation(self, model, user, recipe) -> Response:
         """Удаляет рецепт из избранного или корзины пользователя."""
-        relation = model.objects.filter(user=user, recipe=recipe)
+        deleted, _ = model.objects.filter(user=user, recipe=recipe).delete()
 
-        if not relation.exists():
+        if not deleted:
             return Response(
                 {"errors": "Рецепта нет в этом списке."},
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        relation.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     @action(
@@ -292,18 +234,24 @@ class RecipeViewSet(viewsets.ModelViewSet):
         url_path="get-link",
         permission_classes=[AllowAny],
     )
-    def get_link(self, request: Request, pk: int = None) -> Response:
+    def get_link(self, request: Request, pk: int) -> Response:
         """Генерирует короткую ссылку на рецепт."""
-        validated_pk = self._validate_pk(pk)
-        if validated_pk is None:
-            return Response(
-                {"errors": "Рецепт не найден (невалидный ID)."},
-                status=status.HTTP_404_NOT_FOUND,
-            )
-
-        recipe = get_object_or_404(Recipe, id=validated_pk)
+        recipe = get_object_or_404(Recipe, id=pk)
         short_link = request.build_absolute_uri(f"/s/{recipe.id}")
         return Response({"short-link": short_link}, status=status.HTTP_200_OK)
+
+    @action(
+        detail=False,
+        methods=["get"],
+        url_path="short-link/(?P<recipe_id>\d+)",
+        permission_classes=[AllowAny],
+    )
+    def redirect_short_link(
+        self, request: Request, recipe_id: int
+    ) -> HttpResponseRedirect:
+        """Перенаправляет по короткой ссылке на фронтовую страницу рецепта."""
+        recipe = get_object_or_404(Recipe, id=recipe_id)
+        return HttpResponseRedirect(f"/recipes/{recipe.id}/")
 
     @action(
         detail=False,
@@ -329,12 +277,8 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
         file_content = self._build_shopping_cart_content(user, ingredients)
 
-        response = HttpResponse(
-            file_content, content_type="text/plain; charset=utf-8"
-        )
-        response["Content-Disposition"] = (
-            'attachment; filename="shopping_cart.txt"'
-        )
+        response = HttpResponse(file_content, content_type="text/plain; charset=utf-8")
+        response["Content-Disposition"] = 'attachment; filename="shopping_cart.txt"'
         return response
 
     def _build_shopping_cart_content(self, user, ingredients) -> str:
@@ -345,9 +289,9 @@ class RecipeViewSet(viewsets.ModelViewSet):
         ]
 
         for ing in ingredients:
-            name = ing['ingredient__name']
-            amount = ing['total_amount']
-            unit = ing['ingredient__measurement_unit']
+            name = ing["ingredient__name"]
+            amount = ing["total_amount"]
+            unit = ing["ingredient__measurement_unit"]
             lines.append(f"• {name} — {amount} {unit}\n")
 
         return "".join(lines)
