@@ -5,6 +5,10 @@ from api.fields import Base64ImageField
 from apps.recipes.models import Ingredient, Recipe, RecipeIngredient, Tag
 from apps.users.models import Subscription
 
+# Импорты для Djoser
+from djoser.serializers import UserCreateSerializer as DjoserUserCreateSerializer
+from djoser.serializers import UserSerializer as DjoserUserSerializer
+
 User = get_user_model()
 
 
@@ -42,7 +46,7 @@ class SubscriptionSerializer(UserSerializer):
 
     recipes = serializers.SerializerMethodField()
     recipes_count = serializers.IntegerField(
-        source='recipes.count', read_only=True
+        source='recipes.count', read_only=True  # <-- Должно быть 'recipes'
     )
 
     class Meta(UserSerializer.Meta):
@@ -54,7 +58,8 @@ class SubscriptionSerializer(UserSerializer):
     def get_recipes(self, obj):
         """Возвращает рецепты автора с учетом параметра recipes_limit."""
         request = self.context.get('request')
-        recipes = obj.recipes.all()
+        # Используем related_name='recipes' из модели Recipe
+        recipes = obj.recipes.all()  # <-- Должно работать
 
         if request:
             limit = request.query_params.get('recipes_limit')
@@ -124,8 +129,8 @@ class RecipeReadSerializer(serializers.ModelSerializer):
     ingredients = RecipeIngredientSerializer(
         many=True, source='recipe_ingredients', read_only=True
     )
-    is_favorited = serializers.BooleanField()
-    is_in_shopping_cart = serializers.BooleanField()
+    is_favorited = serializers.SerializerMethodField()  # <-- Исправлено
+    is_in_shopping_cart = serializers.SerializerMethodField()  # <-- Исправлено
     image = serializers.SerializerMethodField()
 
     class Meta:
@@ -135,6 +140,20 @@ class RecipeReadSerializer(serializers.ModelSerializer):
             'is_favorited', 'is_in_shopping_cart',
             'name', 'image', 'text', 'cooking_time',
         )
+
+    def get_is_favorited(self, obj):
+        """Проверяет, добавлен ли рецепт в избранное."""
+        request = self.context.get('request')
+        if not request or request.user.is_anonymous:
+            return False
+        return obj.favorite.filter(user=request.user).exists()  # <-- favorite, НЕ favorites
+
+    def get_is_in_shopping_cart(self, obj):
+        """Проверяет, добавлен ли рецепт в корзину."""
+        request = self.context.get('request')
+        if not request or request.user.is_anonymous:
+            return False
+        return obj.shopping_cart.filter(user=request.user).exists()  # <-- shopping_cart
 
     def get_image(self, obj):
         """Возвращает URL изображения рецепта."""
@@ -242,3 +261,49 @@ class AvatarSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('avatar',)
+
+
+# ========== ДЛЯ DJOSER ==========
+
+class CustomUserSerializer(DjoserUserSerializer):
+    """Кастомный сериализатор пользователя для Djoser."""
+    
+    is_subscribed = serializers.SerializerMethodField()
+    avatar = serializers.SerializerMethodField()
+    
+    class Meta(DjoserUserSerializer.Meta):
+        model = User
+        fields = (
+            'email', 'id', 'username', 'first_name',
+            'last_name', 'is_subscribed', 'avatar',
+        )
+    
+    def get_is_subscribed(self, obj):
+        """Проверяет, подписан ли текущий пользователь на автора."""
+        request = self.context.get('request')
+        if not request or request.user.is_anonymous:
+            return False
+        return Subscription.objects.filter(
+            user=request.user, author=obj
+        ).exists()
+    
+    def get_avatar(self, obj):
+        """Возвращает URL аватара пользователя."""
+        if obj.avatar:
+            return obj.avatar.url
+        return None
+
+
+class CustomUserCreateSerializer(DjoserUserCreateSerializer):
+    """Кастомный сериализатор для регистрации пользователя."""
+    
+    class Meta(DjoserUserCreateSerializer.Meta):
+        model = User
+        fields = ('id', 'username', 'email', 'password', 'first_name', 'last_name')
+        extra_kwargs = {
+            'password': {'write_only': True},
+            'email': {'required': True},
+            'username': {'required': True},
+            'first_name': {'required': True},  # <-- Добавь
+            'last_name': {'required': True},   # <-- Добавь
+        }

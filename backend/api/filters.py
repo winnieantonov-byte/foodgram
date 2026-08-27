@@ -19,15 +19,16 @@ class IngredientFilter(filters.FilterSet):
 class RecipeFilter(filters.FilterSet):
     """Фильтр для рецептов по автору, избранному и корзине."""
 
-    is_favorited = filters.BooleanFilter(method='filter_is_favorited')
-    is_in_shopping_cart = filters.BooleanFilter(
-        method='filter_is_in_shopping_cart'
+    is_favorited = filters.NumberFilter(method='filter_is_favorited')  # <-- NumberFilter вместо BooleanFilter
+    is_in_shopping_cart = filters.NumberFilter(
+        method='filter_is_in_shopping_cart'  # <-- NumberFilter вместо BooleanFilter
     )
     tags = filters.ModelMultipleChoiceFilter(
         field_name='tags__slug',
         to_field_name='slug',
         queryset=Tag.objects.all(),
     )
+    author = filters.NumberFilter(field_name='author__id')  # <-- Добавь этот фильтр!
 
     class Meta:
         model = Recipe
@@ -36,14 +37,18 @@ class RecipeFilter(filters.FilterSet):
     def _filter_relation(self, queryset, value, related_name):
         """Фильтрует рецепты по связи с пользователем."""
         user = getattr(self.request, 'user', None)
+        # value может быть 1, 0, True, False, 'true', 'false'
         if value and user and user.is_authenticated:
-            return queryset.filter(**{f'{related_name}__user': user})
+            # Преобразуем значение в bool
+            is_true = value in (1, '1', True, 'true')
+            if is_true:
+                return queryset.filter(**{f'{related_name}__user': user})
         return queryset
 
-    def filter_is_favorited(self, queryset, value):
+    def filter_is_favorited(self, queryset, name, value):
         """Фильтрует рецепты, добавленные в избранное."""
         return self._filter_relation(queryset, value, 'favorite')
 
-    def filter_is_in_shopping_cart(self, queryset, value):
+    def filter_is_in_shopping_cart(self, queryset, name, value):
         """Фильтрует рецепты, добавленные в корзину."""
         return self._filter_relation(queryset, value, 'shopping_cart')

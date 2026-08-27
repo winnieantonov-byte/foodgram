@@ -94,9 +94,17 @@ class CustomUserViewSet(UserViewSet):
         methods=["post", "delete"],
         permission_classes=[IsAuthenticated],
     )
-    def subscribe(self, request: Request, id: int = None) -> Response:
+    def subscribe(self, request: Request, **kwargs) -> Response:
         """Подписка или отписка от автора."""
-        author = get_object_or_404(User, id=id)
+        # Берём id или pk из kwargs
+        user_id = kwargs.get('pk') or kwargs.get('id')
+        if not user_id:
+            return Response(
+                {"errors": "Не передан идентификатор пользователя"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        
+        author = get_object_or_404(User, id=user_id)
         user = request.user
 
         if request.method == "POST":
