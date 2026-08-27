@@ -32,6 +32,10 @@ User = get_user_model()
 class CustomUserViewSet(UserViewSet):
     """Вьюсет пользователей с подписками и управлением аватаром."""
 
+    # Идентификатор в URL всегда числовой: нечисловой путь не совпадёт
+    # с маршрутом и вернёт 404 вместо ошибки приведения типа (500).
+    lookup_value_regex = r'\d+'
+
     @action(
         ["get", "put", "patch", "delete"],
         detail=False,
@@ -174,6 +178,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
     """Вьюсет для CRUD операций с рецептами."""
 
     queryset = Recipe.objects.all()
+    lookup_value_regex = r'\d+'
     permission_classes = [IsAuthenticatedOrReadOnly, IsAuthorOrReadOnly]
     filter_backends = (DjangoFilterBackend,)
     filterset_class = RecipeFilter
