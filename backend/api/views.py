@@ -106,9 +106,9 @@ class UserViewSet(DjoserUserViewSet):
         methods=["post", "delete"],
         permission_classes=[IsAuthenticated],
     )
-    def subscribe(self, request, pk=None):
+    def subscribe(self, request, id=None):
         """Подписка или отписка от автора."""
-        author = get_object_or_404(User, id=pk)
+        author = get_object_or_404(User, pk=id)
         user = request.user
 
         if user == author:
