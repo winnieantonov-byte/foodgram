@@ -6,24 +6,22 @@ from django_filters.rest_framework import DjangoFilterBackend
 from djoser.views import UserViewSet
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.permissions import AllowAny, IsAuthenticated, IsAuthenticatedOrReadOnly
 from rest_framework.request import Request
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 from api.filters import IngredientFilter, RecipeFilter
 from api.permissions import IsAuthorOrReadOnly
 from api.serializers import (
+    AvatarSerializer,
     CompactRecipeSerializer,
     IngredientSerializer,
     RecipeReadSerializer,
     RecipeWriteSerializer,
     SubscriptionSerializer,
     TagSerializer,
-    AvatarSerializer,
 )
-from apps.recipes.models import Favorite, Ingredient, Recipe
-from apps.recipes.models import RecipeIngredient, ShoppingCart, Tag
+from apps.recipes.models import Favorite, Ingredient, Recipe, RecipeIngredient, ShoppingCart, Tag
 from apps.users.models import Subscription
 
 User = get_user_model()
@@ -31,6 +29,8 @@ User = get_user_model()
 
 class CustomUserViewSet(UserViewSet):
     """Вьюсет пользователей с подписками и управлением аватаром."""
+
+    lookup_value_regex = r'\d+'
 
     @action(
         ["get", "put", "patch", "delete"],
@@ -96,14 +96,13 @@ class CustomUserViewSet(UserViewSet):
     )
     def subscribe(self, request: Request, **kwargs) -> Response:
         """Подписка или отписка от автора."""
-        # Берём id или pk из kwargs
         user_id = kwargs.get('pk') or kwargs.get('id')
         if not user_id:
             return Response(
                 {"errors": "Не передан идентификатор пользователя"},
                 status=status.HTTP_400_BAD_REQUEST,
             )
-        
+
         author = get_object_or_404(User, id=user_id)
         user = request.user
 
@@ -174,6 +173,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
     """Вьюсет для CRUD операций с рецептами."""
 
     queryset = Recipe.objects.all()
+    lookup_value_regex = r'\d+'
     permission_classes = [IsAuthenticatedOrReadOnly, IsAuthorOrReadOnly]
     filter_backends = (DjangoFilterBackend,)
     filterset_class = RecipeFilter
@@ -184,9 +184,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
             return RecipeReadSerializer
         return RecipeWriteSerializer
 
-    def _manage_relation(
-        self, request: Request, model, pk: int
-    ) -> Response:
+    def _manage_relation(self, request: Request, model, pk: int) -> Response:
         """Общий обработчик для избранного и корзины покупок."""
         recipe = get_object_or_404(Recipe, id=pk)
         user = request.user
@@ -259,9 +257,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
         url_path=r"short-link/(?P<recipe_id>\d+)",
         permission_classes=[AllowAny],
     )
-    def redirect_short_link(
-        self, request: Request, recipe_id: int
-    ) -> HttpResponseRedirect:
+    def redirect_short_link(self, request: Request, recipe_id: int) -> HttpResponseRedirect:
         """Перенаправляет по короткой ссылке на фронтовую страницу рецепта."""
         recipe = get_object_or_404(Recipe, id=recipe_id)
         return HttpResponseRedirect(f"/recipes/{recipe.id}/")

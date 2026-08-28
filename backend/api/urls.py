@@ -27,7 +27,7 @@ urlpatterns = [
     # Короткие ссылки на рецепты
     path(
         's/<int:recipe_id>/', RecipeViewSet.as_view(
-            {'get': 'get_link'}
+            {'get': 'redirect_short_link'}
         ), name='short-link'
     ),
 ]

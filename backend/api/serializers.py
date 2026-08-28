@@ -45,9 +45,7 @@ class SubscriptionSerializer(UserSerializer):
     """Сериализатор для подписок с рецептами автора."""
 
     recipes = serializers.SerializerMethodField()
-    recipes_count = serializers.IntegerField(
-        source='recipes.count', read_only=True  # <-- Должно быть 'recipes'
-    )
+    recipes_count = serializers.SerializerMethodField()
 
     class Meta(UserSerializer.Meta):
         fields = UserSerializer.Meta.fields + ('recipes', 'recipes_count')
@@ -55,11 +53,14 @@ class SubscriptionSerializer(UserSerializer):
             'email', 'username', 'first_name', 'last_name', 'avatar'
         )
 
+    def get_recipes_count(self, obj):
+        """Возвращает количество рецептов автора."""
+        return obj.recipes.count()
+
     def get_recipes(self, obj):
         """Возвращает рецепты автора с учетом параметра recipes_limit."""
         request = self.context.get('request')
-        # Используем related_name='recipes' из модели Recipe
-        recipes = obj.recipes.all()  # <-- Должно работать
+        recipes = obj.recipes.all()
 
         if request:
             limit = request.query_params.get('recipes_limit')
@@ -129,8 +130,8 @@ class RecipeReadSerializer(serializers.ModelSerializer):
     ingredients = RecipeIngredientSerializer(
         many=True, source='recipe_ingredients', read_only=True
     )
-    is_favorited = serializers.SerializerMethodField()  # <-- Исправлено
-    is_in_shopping_cart = serializers.SerializerMethodField()  # <-- Исправлено
+    is_favorited = serializers.SerializerMethodField()
+    is_in_shopping_cart = serializers.SerializerMethodField()
     image = serializers.SerializerMethodField()
 
     class Meta:
@@ -146,14 +147,14 @@ class RecipeReadSerializer(serializers.ModelSerializer):
         request = self.context.get('request')
         if not request or request.user.is_anonymous:
             return False
-        return obj.favorite.filter(user=request.user).exists()  # <-- favorite, НЕ favorites
+        return obj.favorite.filter(user=request.user).exists()
 
     def get_is_in_shopping_cart(self, obj):
         """Проверяет, добавлен ли рецепт в корзину."""
         request = self.context.get('request')
         if not request or request.user.is_anonymous:
             return False
-        return obj.shopping_cart.filter(user=request.user).exists()  # <-- shopping_cart
+        return obj.shopping_cart.filter(user=request.user).exists()
 
     def get_image(self, obj):
         """Возвращает URL изображения рецепта."""
@@ -263,21 +264,19 @@ class AvatarSerializer(serializers.ModelSerializer):
         fields = ('avatar',)
 
 
-# ========== ДЛЯ DJOSER ==========
-
 class CustomUserSerializer(DjoserUserSerializer):
     """Кастомный сериализатор пользователя для Djoser."""
-    
+
     is_subscribed = serializers.SerializerMethodField()
     avatar = serializers.SerializerMethodField()
-    
+
     class Meta(DjoserUserSerializer.Meta):
         model = User
         fields = (
             'email', 'id', 'username', 'first_name',
             'last_name', 'is_subscribed', 'avatar',
         )
-    
+
     def get_is_subscribed(self, obj):
         """Проверяет, подписан ли текущий пользователь на автора."""
         request = self.context.get('request')
@@ -286,7 +285,7 @@ class CustomUserSerializer(DjoserUserSerializer):
         return Subscription.objects.filter(
             user=request.user, author=obj
         ).exists()
-    
+
     def get_avatar(self, obj):
         """Возвращает URL аватара пользователя."""
         if obj.avatar:
@@ -296,7 +295,7 @@ class CustomUserSerializer(DjoserUserSerializer):
 
 class CustomUserCreateSerializer(DjoserUserCreateSerializer):
     """Кастомный сериализатор для регистрации пользователя."""
-    
+
     class Meta(DjoserUserCreateSerializer.Meta):
         model = User
         fields = ('id', 'username', 'email', 'password', 'first_name', 'last_name')
@@ -304,6 +303,6 @@ class CustomUserCreateSerializer(DjoserUserCreateSerializer):
             'password': {'write_only': True},
             'email': {'required': True},
             'username': {'required': True},
-            'first_name': {'required': True},  # <-- Добавь
-            'last_name': {'required': True},   # <-- Добавь
+            'first_name': {'required': True},
+            'last_name': {'required': True},
         }

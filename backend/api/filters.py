@@ -1,9 +1,6 @@
-from django.contrib.auth import get_user_model
 from django_filters import rest_framework as filters
 
 from apps.recipes.models import Ingredient, Recipe, Tag
-
-User = get_user_model()
 
 
 class IngredientFilter(filters.FilterSet):
@@ -19,16 +16,16 @@ class IngredientFilter(filters.FilterSet):
 class RecipeFilter(filters.FilterSet):
     """Фильтр для рецептов по автору, избранному и корзине."""
 
-    is_favorited = filters.NumberFilter(method='filter_is_favorited')  # <-- NumberFilter вместо BooleanFilter
+    is_favorited = filters.NumberFilter(method='filter_is_favorited')
     is_in_shopping_cart = filters.NumberFilter(
-        method='filter_is_in_shopping_cart'  # <-- NumberFilter вместо BooleanFilter
+        method='filter_is_in_shopping_cart'
     )
     tags = filters.ModelMultipleChoiceFilter(
         field_name='tags__slug',
         to_field_name='slug',
         queryset=Tag.objects.all(),
     )
-    author = filters.NumberFilter(field_name='author__id')  # <-- Добавь этот фильтр!
+    author = filters.NumberFilter(field_name='author__id')
 
     class Meta:
         model = Recipe
@@ -37,9 +34,7 @@ class RecipeFilter(filters.FilterSet):
     def _filter_relation(self, queryset, value, related_name):
         """Фильтрует рецепты по связи с пользователем."""
         user = getattr(self.request, 'user', None)
-        # value может быть 1, 0, True, False, 'true', 'false'
         if value and user and user.is_authenticated:
-            # Преобразуем значение в bool
             is_true = value in (1, '1', True, 'true')
             if is_true:
                 return queryset.filter(**{f'{related_name}__user': user})
