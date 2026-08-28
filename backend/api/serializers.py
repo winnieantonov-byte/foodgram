@@ -6,7 +6,9 @@ from apps.recipes.models import Ingredient, Recipe, RecipeIngredient, Tag
 from apps.users.models import Subscription
 
 # Импорты для Djoser
-from djoser.serializers import UserCreateSerializer as DjoserUserCreateSerializer
+from djoser.serializers import (
+    UserCreateSerializer as DjoserUserCreateSerializer
+)
 from djoser.serializers import UserSerializer as DjoserUserSerializer
 
 User = get_user_model()
@@ -298,7 +300,9 @@ class CustomUserCreateSerializer(DjoserUserCreateSerializer):
 
     class Meta(DjoserUserCreateSerializer.Meta):
         model = User
-        fields = ('id', 'username', 'email', 'password', 'first_name', 'last_name')
+        fields = (
+            'id', 'username', 'email', 'password', 'first_name', 'last_name'
+        )
         extra_kwargs = {
             'password': {'write_only': True},
             'email': {'required': True},

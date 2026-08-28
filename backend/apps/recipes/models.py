@@ -28,7 +28,10 @@ class Tag(models.Model):
         max_length=SLUG_MAX_LENGTH,
         unique=True,
     )
-    color = models.CharField(max_length=7, default='#49B64E', verbose_name='Цвет')
+    color = models.CharField(
+        max_length=7, default='#49B64E', verbose_name='Цвет'
+    )
+
     class Meta:
         verbose_name = 'Тег'
         verbose_name_plural = 'Теги'

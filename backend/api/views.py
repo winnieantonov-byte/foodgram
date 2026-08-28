@@ -6,7 +6,8 @@ from django_filters.rest_framework import DjangoFilterBackend
 from djoser.views import UserViewSet
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
-from rest_framework.permissions import AllowAny, IsAuthenticated, IsAuthenticatedOrReadOnly
+from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.request import Request
 from rest_framework.response import Response
 
@@ -21,7 +22,8 @@ from api.serializers import (
     SubscriptionSerializer,
     TagSerializer,
 )
-from apps.recipes.models import Favorite, Ingredient, Recipe, RecipeIngredient, ShoppingCart, Tag
+from apps.recipes.models import Favorite, Ingredient, Recipe
+from apps.recipes.models import RecipeIngredient, ShoppingCart, Tag
 from apps.users.models import Subscription
 
 User = get_user_model()
@@ -257,7 +259,9 @@ class RecipeViewSet(viewsets.ModelViewSet):
         url_path=r"short-link/(?P<recipe_id>\d+)",
         permission_classes=[AllowAny],
     )
-    def redirect_short_link(self, request: Request, recipe_id: int) -> HttpResponseRedirect:
+    def redirect_short_link(
+        self, request: Request, recipe_id: int
+    ) -> HttpResponseRedirect:
         """Перенаправляет по короткой ссылке на фронтовую страницу рецепта."""
         recipe = get_object_or_404(Recipe, id=recipe_id)
         return HttpResponseRedirect(f"/recipes/{recipe.id}/")

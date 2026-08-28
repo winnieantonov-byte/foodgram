@@ -1,17 +1,26 @@
 from django.contrib.auth import get_user_model
-from apps.recipes.models import Tag, Ingredient, Recipe, RecipeIngredient, Favorite, ShoppingCart
-from apps.users.models import Subscription
 from django.core.files.base import ContentFile
 import base64
 
+from apps.recipes.models import (
+    Favorite,
+    Ingredient,
+    Recipe,
+    RecipeIngredient,
+    ShoppingCart,
+    Tag,
+)
+from apps.users.models import Subscription
+
 User = get_user_model()
+
 
 def create_users():
     """Создает пользователей."""
     print("=" * 60)
     print("1. СОЗДАНИЕ ПОЛЬЗОВАТЕЛЕЙ")
     print("=" * 60)
-    
+
     users_data = [
         {
             'username': 'user1',
@@ -49,7 +58,7 @@ def create_users():
             'password': 'password123'
         },
     ]
-    
+
     users = {}
     for user_data in users_data:
         user, created = User.objects.get_or_create(
@@ -63,19 +72,22 @@ def create_users():
         if created:
             user.set_password(user_data['password'])
             user.save()
-            print(f"  ✅ Создан пользователь: {user.username} (ID: {user.id})")
+            print(f"✅ Создан пользователь: {user.username} (ID: {user.id})")
         else:
-            print(f"  ℹ️ Пользователь уже существует: {user.username} (ID: {user.id})")
+            print(
+                f"ℹ️ Пользователь уже сущ.: {user.username} (ID: {user.id})"
+            )
         users[user.username] = user
-    
+
     return users
+
 
 def create_tags():
     """Создает теги."""
     print("\n" + "=" * 60)
     print("2. СОЗДАНИЕ ТЕГОВ")
     print("=" * 60)
-    
+
     tags_data = [
         {'name': 'Завтрак', 'slug': 'breakfast', 'color': '#FF6B6B'},
         {'name': 'Обед', 'slug': 'lunch', 'color': '#4ECDC4'},
@@ -88,7 +100,7 @@ def create_tags():
         {'name': 'Закуски', 'slug': 'snacks', 'color': '#FFD700'},
         {'name': 'Веганское', 'slug': 'vegan', 'color': '#32CD32'},
     ]
-    
+
     tags = {}
     for tag_data in tags_data:
         tag, created = Tag.objects.get_or_create(
@@ -99,23 +111,27 @@ def create_tags():
             }
         )
         if not created:
-            # Обновляем существующий тег
             tag.name = tag_data['name']
             tag.color = tag_data['color']
             tag.save()
-            print(f"  🔄 Обновлен тег: {tag.name} (slug: {tag.slug}, ID: {tag.id})")
+            print(
+                f"🔄 Обновлен тег: {tag.name} (slug: {tag.slug}, ID: {tag.id})"
+            )
         else:
-            print(f"  ✅ Создан тег: {tag.name} (slug: {tag.slug}, ID: {tag.id})")
+            print(
+                f"✅ Создан тег: {tag.name} (slug: {tag.slug}, ID: {tag.id})"
+            )
         tags[tag.slug] = tag
-    
+
     return tags
+
 
 def create_ingredients():
     """Создает ингредиенты."""
     print("\n" + "=" * 60)
     print("3. СОЗДАНИЕ ИНГРЕДИЕНТОВ")
     print("=" * 60)
-    
+
     ingredients_data = [
         {'name': 'Мука', 'measurement_unit': 'г'},
         {'name': 'Сахар', 'measurement_unit': 'г'},
@@ -167,15 +183,15 @@ def create_ingredients():
         {'name': 'Изюм', 'measurement_unit': 'г'},
         {'name': 'Шоколад', 'measurement_unit': 'г'},
         {'name': 'Печенье', 'measurement_unit': 'г'},
-        {'name': 'Свекла', 'measurement_unit': 'шт'}, 
-        {'name': 'Сливки', 'measurement_unit': 'мл'}, 
-        {'name': 'Салат', 'measurement_unit': 'шт'},   
-        {'name': 'Йогурт', 'measurement_unit': 'г'},   
-        {'name': 'Мясо', 'measurement_unit': 'г'},     
-        {'name': 'Овсянка', 'measurement_unit': 'г'}, 
-        {'name': 'Рис', 'measurement_unit': 'г'}, 
+        {'name': 'Свекла', 'measurement_unit': 'шт'},
+        {'name': 'Сливки', 'measurement_unit': 'мл'},
+        {'name': 'Салат', 'measurement_unit': 'шт'},
+        {'name': 'Йогурт', 'measurement_unit': 'г'},
+        {'name': 'Мясо', 'measurement_unit': 'г'},
+        {'name': 'Овсянка', 'measurement_unit': 'г'},
+        {'name': 'Рис', 'measurement_unit': 'г'},
     ]
-    
+
     ingredients = {}
     for ing_data in ingredients_data:
         ingredient, created = Ingredient.objects.get_or_create(
@@ -183,29 +199,36 @@ def create_ingredients():
             defaults={'measurement_unit': ing_data['measurement_unit']}
         )
         if not created:
-            # Обновляем существующий ингредиент
             ingredient.measurement_unit = ing_data['measurement_unit']
             ingredient.save()
         ingredients[ingredient.name] = ingredient
-    
+
     print(f"  📊 Всего ингредиентов: {Ingredient.objects.count()}")
     return ingredients
+
 
 def create_recipes(users, tags, ingredients):
     """Создает рецепты."""
     print("\n" + "=" * 60)
     print("4. СОЗДАНИЕ РЕЦЕПТОВ")
     print("=" * 60)
-    
-    # Простое изображение (1x1 пиксель PNG)
-    dummy_image = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg=="
-    
+
+    dummy_image = (
+        "data:image/png;base64,"
+        "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJ"
+        "AAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg=="
+    )
+
     recipes_data = [
         # Рецепты от user1
         {
             'author': 'user1',
             'name': 'Блины классические',
-            'text': 'Классический рецепт русских блинов. Смешайте муку, сахар, соль, яйца и молоко. Взбейте до однородности. Жарьте на разогретой сковороде.',
+            'text': (
+                'Классический рецепт русских блинов. Смешайте муку, '
+                'сахар, соль, яйца и молоко. Взбейте до однородности. '
+                'Жарьте на разогретой сковороде.'
+            ),
             'cooking_time': 30,
             'tags': ['breakfast', 'baking'],
             'ingredients': [
@@ -220,7 +243,10 @@ def create_recipes(users, tags, ingredients):
         {
             'author': 'user1',
             'name': 'Салат Оливье',
-            'text': 'Любимый новогодний салат. Нарежьте все ингредиенты и смешайте с майонезом.',
+            'text': (
+                'Любимый новогодний салат. Нарежьте все ингредиенты '
+                'и смешайте с майонезом.'
+            ),
             'cooking_time': 45,
             'tags': ['salads', 'snacks'],
             'ingredients': [
@@ -237,7 +263,10 @@ def create_recipes(users, tags, ingredients):
         {
             'author': 'user1',
             'name': 'Шоколадный торт',
-            'text': 'Праздничный шоколадный торт. Смешайте все ингредиенты и выпекайте в духовке.',
+            'text': (
+                'Праздничный шоколадный торт. Смешайте все ингредиенты '
+                'и выпекайте в духовке.'
+            ),
             'cooking_time': 120,
             'tags': ['dessert', 'baking'],
             'ingredients': [
@@ -253,7 +282,10 @@ def create_recipes(users, tags, ingredients):
         {
             'author': 'user1',
             'name': 'Овощной салат',
-            'text': 'Свежий салат из овощей. Нарежьте помидоры и огурцы, добавьте масло и соль.',
+            'text': (
+                'Свежий салат из овощей. Нарежьте помидоры и огурцы, '
+                'добавьте масло и соль.'
+            ),
             'cooking_time': 15,
             'tags': ['salads', 'vegan'],
             'ingredients': [
@@ -267,7 +299,10 @@ def create_recipes(users, tags, ingredients):
         {
             'author': 'user1',
             'name': 'Куриный суп',
-            'text': 'Легкий домашний суп с курицей. Сварите бульон, добавьте овощи и лапшу.',
+            'text': (
+                'Легкий домашний суп с курицей. Сварите бульон, '
+                'добавьте овощи и лапшу.'
+            ),
             'cooking_time': 60,
             'tags': ['soups', 'dinner'],
             'ingredients': [
@@ -280,12 +315,15 @@ def create_recipes(users, tags, ingredients):
                 {'name': 'Зелень', 'amount': 20},
             ]
         },
-        
+
         # Рецепты от user2
         {
             'author': 'user2',
             'name': 'Борщ украинский',
-            'text': 'Наваристый красный борщ со сметаной. Сварите бульон из говядины, добавьте овощи.',
+            'text': (
+                'Наваристый красный борщ со сметаной. Сварите бульон '
+                'из говядины, добавьте овощи.'
+            ),
             'cooking_time': 90,
             'tags': ['soups', 'dinner'],
             'ingredients': [
@@ -302,7 +340,10 @@ def create_recipes(users, tags, ingredients):
         {
             'author': 'user2',
             'name': 'Омлет',
-            'text': 'Нежный омлет с овощами. Взбейте яйца, добавьте молоко и жарьте.',
+            'text': (
+                'Нежный омлет с овощами. Взбейте яйца, добавьте молоко '
+                'и жарьте.'
+            ),
             'cooking_time': 20,
             'tags': ['breakfast'],
             'ingredients': [
@@ -316,7 +357,9 @@ def create_recipes(users, tags, ingredients):
         {
             'author': 'user2',
             'name': 'Греческий салат',
-            'text': 'Классический греческий салат с оливками и сыром.',
+            'text': (
+                'Классический греческий салат с оливками и сыром.'
+            ),
             'cooking_time': 15,
             'tags': ['salads', 'vegan'],
             'ingredients': [
@@ -345,7 +388,9 @@ def create_recipes(users, tags, ingredients):
         {
             'author': 'user2',
             'name': 'Жареные овощи',
-            'text': 'Ароматные овощи на масле. Обжарьте овощи с чесноком.',
+            'text': (
+                'Ароматные овощи на масле. Обжарьте овощи с чесноком.'
+            ),
             'cooking_time': 25,
             'tags': ['dinner', 'vegan'],
             'ingredients': [
@@ -356,12 +401,14 @@ def create_recipes(users, tags, ingredients):
                 {'name': 'Зелень', 'amount': 20},
             ]
         },
-        
+
         # Рецепты от user3
         {
             'author': 'user3',
             'name': 'Салат Цезарь',
-            'text': 'Классический салат Цезарь с курицей и сухариками.',
+            'text': (
+                'Классический салат Цезарь с курицей и сухариками.'
+            ),
             'cooking_time': 30,
             'tags': ['salads', 'lunch'],
             'ingredients': [
@@ -376,7 +423,9 @@ def create_recipes(users, tags, ingredients):
         {
             'author': 'user3',
             'name': 'Овсянка с фруктами',
-            'text': 'Полезный завтрак с овсянкой и свежими фруктами.',
+            'text': (
+                'Полезный завтрак с овсянкой и свежими фруктами.'
+            ),
             'cooking_time': 15,
             'tags': ['breakfast', 'vegan'],
             'ingredients': [
@@ -390,7 +439,9 @@ def create_recipes(users, tags, ingredients):
         {
             'author': 'user3',
             'name': 'Паста с курицей',
-            'text': 'Итальянская паста с курицей и сливочным соусом.',
+            'text': (
+                'Итальянская паста с курицей и сливочным соусом.'
+            ),
             'cooking_time': 40,
             'tags': ['lunch', 'dinner'],
             'ingredients': [
@@ -434,28 +485,28 @@ def create_recipes(users, tags, ingredients):
             ]
         },
     ]
-    
+
     recipes = []
-    for i, recipe_data in enumerate(recipes_data):
-        # Получаем объект пользователя
+    for recipe_data in recipes_data:
         author = users[recipe_data['author']]
-        
+
         recipe = Recipe.objects.create(
             author=author,
             name=recipe_data['name'],
             text=recipe_data['text'],
             cooking_time=recipe_data['cooking_time'],
         )
-        
-        # Сохраняем изображение
+
         format, imgstr = dummy_image.split(';base64,')
         ext = format.split('/')[-1]
-        recipe.image.save(f'recipe_{recipe.id}.{ext}', ContentFile(base64.b64decode(imgstr)), save=True)
-        
-        # Добавляем теги
+        recipe.image.save(
+            f'recipe_{recipe.id}.{ext}',
+            ContentFile(base64.b64decode(imgstr)),
+            save=True
+        )
+
         recipe.tags.set([tags[tag_slug] for tag_slug in recipe_data['tags']])
-        
-        # Добавляем ингредиенты
+
         for ing_data in recipe_data['ingredients']:
             ingredient = ingredients[ing_data['name']]
             RecipeIngredient.objects.create(
@@ -463,18 +514,22 @@ def create_recipes(users, tags, ingredients):
                 ingredient=ingredient,
                 amount=ing_data['amount']
             )
-        
+
         recipes.append(recipe)
-        print(f"  ✅ Создан рецепт {recipe.id}: {recipe.name} (автор: {recipe.author.username})")
-    
+        print(
+            f"  ✅ Создан рецепт {recipe.id}: {recipe.name} "
+            f"(автор: {recipe.author.username})"
+        )
+
     return recipes
+
 
 def create_subscriptions(users):
     """Создает подписки."""
     print("\n" + "=" * 60)
     print("5. СОЗДАНИЕ ПОДПИСОК")
     print("=" * 60)
-    
+
     subscriptions_data = [
         {'user': 'user1', 'author': 'user2'},
         {'user': 'user1', 'author': 'user3'},
@@ -487,7 +542,7 @@ def create_subscriptions(users):
         {'user': 'user4', 'author': 'user2'},
         {'user': 'user5', 'author': 'user1'},
     ]
-    
+
     for sub_data in subscriptions_data:
         user = users[sub_data['user']]
         author = users[sub_data['author']]
@@ -498,25 +553,29 @@ def create_subscriptions(users):
         if created:
             print(f"  ✅ {sub_data['user']} подписан на {sub_data['author']}")
         else:
-            print(f"  ℹ️ Подписка уже существует: {sub_data['user']} -> {sub_data['author']}")
+            print(
+                f"  ℹ️ Подписка уже существует: "
+                f"{sub_data['user']} -> {sub_data['author']}"
+            )
+
 
 def create_favorites(users, recipes):
     """Добавляет рецепты в избранное."""
     print("\n" + "=" * 60)
     print("6. ДОБАВЛЕНИЕ В ИЗБРАННОЕ")
     print("=" * 60)
-    
+
     favorites_data = [
-        {'user': 'user1', 'recipe': 0},  # Блины
-        {'user': 'user1', 'recipe': 1},  # Оливье
-        {'user': 'user2', 'recipe': 2},  # Торт
-        {'user': 'user2', 'recipe': 3},  # Борщ
-        {'user': 'user3', 'recipe': 4},  # Омлет
-        {'user': 'user3', 'recipe': 5},  # Цезарь
-        {'user': 'user4', 'recipe': 6},  # Овсянка
-        {'user': 'user5', 'recipe': 7},  # Паста
+        {'user': 'user1', 'recipe': 0},
+        {'user': 'user1', 'recipe': 1},
+        {'user': 'user2', 'recipe': 2},
+        {'user': 'user2', 'recipe': 3},
+        {'user': 'user3', 'recipe': 4},
+        {'user': 'user3', 'recipe': 5},
+        {'user': 'user4', 'recipe': 6},
+        {'user': 'user5', 'recipe': 7},
     ]
-    
+
     for fav_data in favorites_data:
         user = users[fav_data['user']]
         recipe = recipes[fav_data['recipe']]
@@ -527,25 +586,29 @@ def create_favorites(users, recipes):
         if created:
             print(f"  ✅ {fav_data['user']} добавил в избранное: {recipe.name}")
         else:
-            print(f"  ℹ️ Уже в избранном: {fav_data['user']} -> {recipe.name}")
+            print(
+                f"  ℹ️ Уже в избранном: "
+                f"{fav_data['user']} -> {recipe.name}"
+            )
+
 
 def create_shopping_cart(users, recipes):
     """Добавляет рецепты в корзину."""
     print("\n" + "=" * 60)
     print("7. ДОБАВЛЕНИЕ В КОРЗИНУ")
     print("=" * 60)
-    
+
     cart_data = [
-        {'user': 'user1', 'recipe': 0},  # Блины
-        {'user': 'user1', 'recipe': 1},  # Оливье
-        {'user': 'user2', 'recipe': 2},  # Торт
-        {'user': 'user2', 'recipe': 3},  # Борщ
-        {'user': 'user3', 'recipe': 4},  # Омлет
-        {'user': 'user3', 'recipe': 5},  # Цезарь
-        {'user': 'user4', 'recipe': 6},  # Овсянка
-        {'user': 'user5', 'recipe': 7},  # Паста
+        {'user': 'user1', 'recipe': 0},
+        {'user': 'user1', 'recipe': 1},
+        {'user': 'user2', 'recipe': 2},
+        {'user': 'user2', 'recipe': 3},
+        {'user': 'user3', 'recipe': 4},
+        {'user': 'user3', 'recipe': 5},
+        {'user': 'user4', 'recipe': 6},
+        {'user': 'user5', 'recipe': 7},
     ]
-    
+
     for cart in cart_data:
         user = users[cart['user']]
         recipe = recipes[cart['recipe']]
@@ -556,15 +619,18 @@ def create_shopping_cart(users, recipes):
         if created:
             print(f"  ✅ {cart['user']} добавил в корзину: {recipe.name}")
         else:
-            print(f"  ℹ️ Уже в корзине: {cart['user']} -> {recipe.name}")
+            print(
+                f"  ℹ️ Уже в корзине: "
+                f"{cart['user']} -> {recipe.name}"
+            )
+
 
 def main():
     """Главная функция."""
     print("=" * 60)
     print("🚀 НАЧАЛО СОЗДАНИЯ ТЕСТОВЫХ ДАННЫХ")
     print("=" * 60)
-    
-    # Создаем данные
+
     users = create_users()
     tags = create_tags()
     ingredients = create_ingredients()
@@ -572,8 +638,7 @@ def main():
     create_subscriptions(users)
     create_favorites(users, recipes)
     create_shopping_cart(users, recipes)
-    
-    # Итоги
+
     print("\n" + "=" * 60)
     print("📊 ИТОГИ СОЗДАНИЯ ТЕСТОВЫХ ДАННЫХ:")
     print("=" * 60)
@@ -588,5 +653,5 @@ def main():
     print("✅ ВСЕ ДАННЫЕ УСПЕШНО СОЗДАНЫ!")
     print("=" * 60)
 
-# Запускаем создание данных
+
 main()
