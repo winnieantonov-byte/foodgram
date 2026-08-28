@@ -1,13 +1,17 @@
 from django.contrib.auth import get_user_model
+from django.db import IntegrityError
 from django.db.models import Sum
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
-from djoser.views import UserViewSet
+from djoser.views import UserViewSet as DjoserUserViewSet
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
-from rest_framework.permissions import AllowAny, IsAuthenticated
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.permissions import (
+    AllowAny,
+    IsAuthenticated,
+    IsAuthenticatedOrReadOnly,
+)
 from rest_framework.request import Request
 from rest_framework.response import Response
 
@@ -22,21 +26,27 @@ from api.serializers import (
     SubscriptionSerializer,
     TagSerializer,
 )
-from apps.recipes.models import Favorite, Ingredient, Recipe
-from apps.recipes.models import RecipeIngredient, ShoppingCart, Tag
+from apps.recipes.models import (
+    Favorite,
+    Ingredient,
+    Recipe,
+    RecipeIngredient,
+    ShoppingCart,
+    Tag,
+)
 from apps.users.models import Subscription
 
 User = get_user_model()
 
 
-class CustomUserViewSet(UserViewSet):
+class UserViewSet(DjoserUserViewSet):
     """Вьюсет пользователей с подписками и управлением аватаром."""
 
     lookup_value_regex = r'\d+'
 
     @action(
-        ["get", "put", "patch", "delete"],
         detail=False,
+        methods=["get"],
         permission_classes=[IsAuthenticated],
     )
     def me(self, request, *args, **kwargs):
@@ -96,17 +106,16 @@ class CustomUserViewSet(UserViewSet):
         methods=["post", "delete"],
         permission_classes=[IsAuthenticated],
     )
-    def subscribe(self, request: Request, **kwargs) -> Response:
+    def subscribe(self, request, pk=None):
         """Подписка или отписка от автора."""
-        user_id = kwargs.get('pk') or kwargs.get('id')
-        if not user_id:
+        author = get_object_or_404(User, id=pk)
+        user = request.user
+
+        if user == author:
             return Response(
-                {"errors": "Не передан идентификатор пользователя"},
+                {"errors": "Вы не можете подписаться на самого себя."},
                 status=status.HTTP_400_BAD_REQUEST,
             )
-
-        author = get_object_or_404(User, id=user_id)
-        user = request.user
 
         if request.method == "POST":
             return self._create_subscription(user, author, request)
@@ -115,15 +124,15 @@ class CustomUserViewSet(UserViewSet):
 
     def _create_subscription(self, user, author, request: Request) -> Response:
         """Обработка создания подписки."""
-        if user == author:
+        try:
+            _, created = Subscription.objects.get_or_create(
+                user=user, author=author
+            )
+        except IntegrityError:
             return Response(
-                {"errors": "Вы не можете подписаться на самого себя."},
+                {"errors": "Вы уже подписаны на этого автора."},
                 status=status.HTTP_400_BAD_REQUEST,
             )
-
-        subscription, created = Subscription.objects.get_or_create(
-            user=user, author=author
-        )
 
         if not created:
             return Response(
@@ -217,7 +226,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
         if not deleted:
             return Response(
-                {"errors": "Рецепта нет в этом списке."},
+                {"errors": "Рецепт нет в этом списке."},
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
@@ -252,19 +261,6 @@ class RecipeViewSet(viewsets.ModelViewSet):
         recipe = get_object_or_404(Recipe, id=pk)
         short_link = request.build_absolute_uri(f"/s/{recipe.id}")
         return Response({"short-link": short_link}, status=status.HTTP_200_OK)
-
-    @action(
-        detail=False,
-        methods=["get"],
-        url_path=r"short-link/(?P<recipe_id>\d+)",
-        permission_classes=[AllowAny],
-    )
-    def redirect_short_link(
-        self, request: Request, recipe_id: int
-    ) -> HttpResponseRedirect:
-        """Перенаправляет по короткой ссылке на фронтовую страницу рецепта."""
-        recipe = get_object_or_404(Recipe, id=recipe_id)
-        return HttpResponseRedirect(f"/recipes/{recipe.id}/")
 
     @action(
         detail=False,

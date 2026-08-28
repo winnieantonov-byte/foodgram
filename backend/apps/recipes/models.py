@@ -10,6 +10,7 @@ from apps.recipes.constants import (
     RECIPE_NAME_MAX_LENGTH,
     SLUG_MAX_LENGTH,
     TAG_NAME_MAX_LENGTH,
+    MINIMUM_COOKING_TIME
 )
 
 User = get_user_model()
@@ -27,9 +28,6 @@ class Tag(models.Model):
         'Уникальный слаг',
         max_length=SLUG_MAX_LENGTH,
         unique=True,
-    )
-    color = models.CharField(
-        max_length=7, default='#49B64E', verbose_name='Цвет'
     )
 
     class Meta:
@@ -103,7 +101,7 @@ class Recipe(models.Model):
         'Время приготовления (в минутах)',
         validators=[
             MinValueValidator(
-                1,
+                MINIMUM_COOKING_TIME,
                 message='Время приготовления не может быть меньше 1 минуты.',
             ),
             MaxValueValidator(
@@ -147,7 +145,7 @@ class RecipeIngredient(models.Model):
         'Количество',
         validators=[
             MinValueValidator(
-                1,
+                MINIMUM_COOKING_TIME,
                 message='Количество инг. не может быть меньше 1.',
             ),
             MaxValueValidator(
@@ -174,10 +172,10 @@ class RecipeIngredient(models.Model):
 
 
 class UserRecipeRelation(models.Model):
-    """Абстрактная модель для избранного и корзины."""
+    """Абстрактная модель связи пользователя и рецепта."""
 
     user = models.ForeignKey(
-        User,
+        'users.User',
         on_delete=models.CASCADE,
         verbose_name='Пользователь',
     )
@@ -189,9 +187,15 @@ class UserRecipeRelation(models.Model):
 
     class Meta:
         abstract = True
+        constraints = [
+            models.UniqueConstraint(
+                fields=['user', 'recipe'],
+                name='%(app_label)s_%(class)s_unique',
+            )
+        ]
 
-    def __str__(self) -> str:
-        return f'{self.user.username} -> {self.recipe.name}'
+    def __str__(self):
+        return f'{self.user.username} - {self.recipe.name}'
 
 
 class Favorite(UserRecipeRelation):
@@ -201,24 +205,12 @@ class Favorite(UserRecipeRelation):
         verbose_name = 'Избранный рецепт'
         verbose_name_plural = 'Избранные рецепты'
         default_related_name = 'favorite'
-        constraints = [
-            models.UniqueConstraint(
-                fields=['user', 'recipe'],
-                name='%(app_label)s_%(class)s_unique',
-            ),
-        ]
 
 
 class ShoppingCart(UserRecipeRelation):
-    """Модель списка покупок."""
+    """Модель корзины покупок."""
 
     class Meta(UserRecipeRelation.Meta):
-        verbose_name = 'Рецепт в списке покупок'
-        verbose_name_plural = 'Рецепты в списках покупок'
+        verbose_name = 'Корзина покупок'
+        verbose_name_plural = 'Корзины покупок'
         default_related_name = 'shopping_cart'
-        constraints = [
-            models.UniqueConstraint(
-                fields=['user', 'recipe'],
-                name='%(app_label)s_%(class)s_unique',
-            ),
-        ]

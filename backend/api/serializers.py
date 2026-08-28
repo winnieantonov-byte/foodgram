@@ -1,26 +1,21 @@
 from django.contrib.auth import get_user_model
+from djoser.serializers import UserSerializer as DjoserUserSerializer
 from rest_framework import serializers
 
 from api.fields import Base64ImageField
 from apps.recipes.models import Ingredient, Recipe, RecipeIngredient, Tag
 from apps.users.models import Subscription
 
-# Импорты для Djoser
-from djoser.serializers import (
-    UserCreateSerializer as DjoserUserCreateSerializer
-)
-from djoser.serializers import UserSerializer as DjoserUserSerializer
-
 User = get_user_model()
 
 
-class UserSerializer(serializers.ModelSerializer):
+class UserSerializer(DjoserUserSerializer):
     """Сериализатор профиля пользователя."""
 
     is_subscribed = serializers.SerializerMethodField()
     avatar = serializers.SerializerMethodField()
 
-    class Meta:
+    class Meta(DjoserUserSerializer.Meta):
         model = User
         fields = (
             'email', 'id', 'username', 'first_name',
@@ -30,11 +25,14 @@ class UserSerializer(serializers.ModelSerializer):
     def get_is_subscribed(self, obj):
         """Проверяет, подписан ли текущий пользователь на автора."""
         request = self.context.get('request')
-        if not request or request.user.is_anonymous:
+        if not request or not hasattr(request, 'user'):
             return False
-        return Subscription.objects.filter(
-            user=request.user, author=obj
-        ).exists()
+        return bool(
+            request.user.is_authenticated
+            and Subscription.objects.filter(
+                user=request.user, author=obj
+            ).exists()
+        )
 
     def get_avatar(self, obj):
         """Возвращает URL аватара пользователя."""
@@ -64,7 +62,7 @@ class SubscriptionSerializer(UserSerializer):
         request = self.context.get('request')
         recipes = obj.recipes.all()
 
-        if request:
+        if request and hasattr(request, 'query_params'):
             limit = request.query_params.get('recipes_limit')
             if limit and limit.isdigit():
                 recipes = recipes[:int(limit)]
@@ -147,16 +145,22 @@ class RecipeReadSerializer(serializers.ModelSerializer):
     def get_is_favorited(self, obj):
         """Проверяет, добавлен ли рецепт в избранное."""
         request = self.context.get('request')
-        if not request or request.user.is_anonymous:
+        if not request or not hasattr(request, 'user'):
             return False
-        return obj.favorite.filter(user=request.user).exists()
+        return bool(
+            request.user.is_authenticated
+            and obj.favorite.filter(user=request.user).exists()
+        )
 
     def get_is_in_shopping_cart(self, obj):
         """Проверяет, добавлен ли рецепт в корзину."""
         request = self.context.get('request')
-        if not request or request.user.is_anonymous:
+        if not request or not hasattr(request, 'user'):
             return False
-        return obj.shopping_cart.filter(user=request.user).exists()
+        return bool(
+            request.user.is_authenticated
+            and obj.shopping_cart.filter(user=request.user).exists()
+        )
 
     def get_image(self, obj):
         """Возвращает URL изображения рецепта."""
@@ -186,9 +190,9 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError('Это поле обязательно.')
         return value
 
-    def validate(self, data):
+    def validate(self, attrs):
         """Основная валидация для создания рецептов."""
-        ingredients = data.get('ingredients')
+        ingredients = attrs.get('ingredients')
         if not ingredients:
             raise serializers.ValidationError(
                 {'ingredients': 'Должен быть хотя бы один ингредиент.'}
@@ -200,7 +204,7 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
                 {'ingredients': 'Ингредиенты не должны повторяться.'}
             )
 
-        tags = data.get('tags')
+        tags = attrs.get('tags')
         if not tags:
             raise serializers.ValidationError(
                 {'tags': 'Должен быть выбран хотя бы один тег.'}
@@ -211,7 +215,7 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
                 {'tags': 'Теги не должны повторяться.'}
             )
 
-        return data
+        return attrs
 
     def _save_ingredients(self, recipe, ingredients_data):
         """Сохраняет ингредиенты для рецепта."""
@@ -264,49 +268,3 @@ class AvatarSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('avatar',)
-
-
-class CustomUserSerializer(DjoserUserSerializer):
-    """Кастомный сериализатор пользователя для Djoser."""
-
-    is_subscribed = serializers.SerializerMethodField()
-    avatar = serializers.SerializerMethodField()
-
-    class Meta(DjoserUserSerializer.Meta):
-        model = User
-        fields = (
-            'email', 'id', 'username', 'first_name',
-            'last_name', 'is_subscribed', 'avatar',
-        )
-
-    def get_is_subscribed(self, obj):
-        """Проверяет, подписан ли текущий пользователь на автора."""
-        request = self.context.get('request')
-        if not request or request.user.is_anonymous:
-            return False
-        return Subscription.objects.filter(
-            user=request.user, author=obj
-        ).exists()
-
-    def get_avatar(self, obj):
-        """Возвращает URL аватара пользователя."""
-        if obj.avatar:
-            return obj.avatar.url
-        return None
-
-
-class CustomUserCreateSerializer(DjoserUserCreateSerializer):
-    """Кастомный сериализатор для регистрации пользователя."""
-
-    class Meta(DjoserUserCreateSerializer.Meta):
-        model = User
-        fields = (
-            'id', 'username', 'email', 'password', 'first_name', 'last_name'
-        )
-        extra_kwargs = {
-            'password': {'write_only': True},
-            'email': {'required': True},
-            'username': {'required': True},
-            'first_name': {'required': True},
-            'last_name': {'required': True},
-        }

@@ -16,8 +16,8 @@ class IngredientFilter(filters.FilterSet):
 class RecipeFilter(filters.FilterSet):
     """Фильтр для рецептов по автору, избранному и корзине."""
 
-    is_favorited = filters.NumberFilter(method='filter_is_favorited')
-    is_in_shopping_cart = filters.NumberFilter(
+    is_favorited = filters.BooleanFilter(method='filter_is_favorited')
+    is_in_shopping_cart = filters.BooleanFilter(
         method='filter_is_in_shopping_cart'
     )
     tags = filters.ModelMultipleChoiceFilter(
@@ -25,7 +25,6 @@ class RecipeFilter(filters.FilterSet):
         to_field_name='slug',
         queryset=Tag.objects.all(),
     )
-    author = filters.NumberFilter(field_name='author__id')
 
     class Meta:
         model = Recipe
@@ -35,9 +34,7 @@ class RecipeFilter(filters.FilterSet):
         """Фильтрует рецепты по связи с пользователем."""
         user = getattr(self.request, 'user', None)
         if value and user and user.is_authenticated:
-            is_true = value in (1, '1', True, 'true')
-            if is_true:
-                return queryset.filter(**{f'{related_name}__user': user})
+            return queryset.filter(**{f'{related_name}__user': user})
         return queryset
 
     def filter_is_favorited(self, queryset, name, value):

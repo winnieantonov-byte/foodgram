@@ -1,9 +1,0 @@
-# Use this workspace to collaborate
-workspace:
-  id: b3cfecb6-2265-469e-8501-ef9c973eac82
-
-localResources:
-  collections:
-    - ../postman_collection/foodgram.postman_collection.json
-  specs:
-    - ../docs/openapi-schema.yml

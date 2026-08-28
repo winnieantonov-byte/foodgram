@@ -1,7 +1,27 @@
-from django.contrib.auth import get_user_model
-from django.core.files.base import ContentFile
-import base64
+import os
+import subprocess
+import sys
 
+# ============================================================
+# УДАЛЕНИЕ БАЗЫ ДАННЫХ И ВЫПОЛНЕНИЕ МИГРАЦИЙ
+# ============================================================
+
+# Удаляем файл базы данных (если есть)
+if os.path.exists('db.sqlite3'):
+    os.remove('db.sqlite3')
+    print("🗑️  База данных удалена")
+
+# Выполняем миграции
+print("🔄 Выполняем миграции...")
+subprocess.run([sys.executable, 'manage.py', 'makemigrations'], check=True)
+subprocess.run([sys.executable, 'manage.py', 'migrate'], check=True)
+print("✅ Миграции выполнены")
+
+# ============================================================
+# СОЗДАНИЕ ТЕСТОВЫХ ДАННЫХ
+# ============================================================
+
+from django.contrib.auth import get_user_model
 from apps.recipes.models import (
     Favorite,
     Ingredient,
@@ -11,6 +31,8 @@ from apps.recipes.models import (
     Tag,
 )
 from apps.users.models import Subscription
+from django.core.files.base import ContentFile
+import base64
 
 User = get_user_model()
 
@@ -72,11 +94,9 @@ def create_users():
         if created:
             user.set_password(user_data['password'])
             user.save()
-            print(f"✅ Создан пользователь: {user.username} (ID: {user.id})")
+            print(f"  ✅ Создан пользователь: {user.username} (ID: {user.id})")
         else:
-            print(
-                f"ℹ️ Пользователь уже сущ.: {user.username} (ID: {user.id})"
-            )
+            print(f"  ℹ️ Пользователь уже существует: {user.username} (ID: {user.id})")
         users[user.username] = user
 
     return users
@@ -89,38 +109,28 @@ def create_tags():
     print("=" * 60)
 
     tags_data = [
-        {'name': 'Завтрак', 'slug': 'breakfast', 'color': '#FF6B6B'},
-        {'name': 'Обед', 'slug': 'lunch', 'color': '#4ECDC4'},
-        {'name': 'Ужин', 'slug': 'dinner', 'color': '#45B7D1'},
-        {'name': 'Десерт', 'slug': 'dessert', 'color': '#FFA07A'},
-        {'name': 'Салаты', 'slug': 'salads', 'color': '#98FB98'},
-        {'name': 'Супы', 'slug': 'soups', 'color': '#DDA0DD'},
-        {'name': 'Выпечка', 'slug': 'baking', 'color': '#F4A460'},
-        {'name': 'Напитки', 'slug': 'drinks', 'color': '#87CEEB'},
-        {'name': 'Закуски', 'slug': 'snacks', 'color': '#FFD700'},
-        {'name': 'Веганское', 'slug': 'vegan', 'color': '#32CD32'},
+        {'name': 'Завтрак', 'slug': 'breakfast'},
+        {'name': 'Обед', 'slug': 'lunch'},
+        {'name': 'Ужин', 'slug': 'dinner'},
+        {'name': 'Десерт', 'slug': 'dessert'},
+        {'name': 'Салаты', 'slug': 'salads'},
+        {'name': 'Супы', 'slug': 'soups'},
+        {'name': 'Выпечка', 'slug': 'baking'},
+        {'name': 'Напитки', 'slug': 'drinks'},
+        {'name': 'Закуски', 'slug': 'snacks'},
+        {'name': 'Веганское', 'slug': 'vegan'},
     ]
 
     tags = {}
     for tag_data in tags_data:
         tag, created = Tag.objects.get_or_create(
             slug=tag_data['slug'],
-            defaults={
-                'name': tag_data['name'],
-                'color': tag_data['color']
-            }
+            defaults={'name': tag_data['name']}
         )
-        if not created:
-            tag.name = tag_data['name']
-            tag.color = tag_data['color']
-            tag.save()
-            print(
-                f"🔄 Обновлен тег: {tag.name} (slug: {tag.slug}, ID: {tag.id})"
-            )
+        if created:
+            print(f"  ✅ Создан тег: {tag.name} (slug: {tag.slug}, ID: {tag.id})")
         else:
-            print(
-                f"✅ Создан тег: {tag.name} (slug: {tag.slug}, ID: {tag.id})"
-            )
+            print(f"  ℹ️ Тег уже существует: {tag.name} (slug: {tag.slug}, ID: {tag.id})")
         tags[tag.slug] = tag
 
     return tags
@@ -315,8 +325,22 @@ def create_recipes(users, tags, ingredients):
                 {'name': 'Зелень', 'amount': 20},
             ]
         },
-
-        # Рецепты от user2
+        {
+            'author': 'user1',
+            'name': 'Плов',
+            'text': 'Вкусный узбекский плов с мясом и рисом.',
+            'cooking_time': 90,
+            'tags': ['lunch', 'dinner'],
+            'ingredients': [
+                {'name': 'Рис', 'amount': 300},
+                {'name': 'Мясо', 'amount': 500},
+                {'name': 'Лук', 'amount': 2},
+                {'name': 'Морковь', 'amount': 2},
+                {'name': 'Масло растительное', 'amount': 100},
+                {'name': 'Соль', 'amount': 10},
+                {'name': 'Вода', 'amount': 500},
+            ]
+        },
         {
             'author': 'user2',
             'name': 'Борщ украинский',
@@ -401,8 +425,6 @@ def create_recipes(users, tags, ingredients):
                 {'name': 'Зелень', 'amount': 20},
             ]
         },
-
-        # Рецепты от user3
         {
             'author': 'user3',
             'name': 'Салат Цезарь',

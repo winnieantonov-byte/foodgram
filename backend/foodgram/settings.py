@@ -107,6 +107,9 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+PAGE_SIZE = 6
+MAX_PAGE_SIZE = 100
+
 # Интернационализация
 LANGUAGE_CODE = 'ru-ru'
 TIME_ZONE = 'UTC'
@@ -130,7 +133,7 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.TokenAuthentication',
     ],
     'DEFAULT_PAGINATION_CLASS': 'api.pagination.LimitPageNumberPagination',
-    'PAGE_SIZE': 6,
+    'PAGE_SIZE': PAGE_SIZE,
 }
 
 # Djoser
@@ -142,8 +145,7 @@ DJOSER = {
         'user_list': ['rest_framework.permissions.AllowAny'],
     },
     'SERIALIZERS': {
-        'user_create': 'api.serializers.CustomUserCreateSerializer',
-        'user': 'api.serializers.CustomUserSerializer',
-        'current_user': 'api.serializers.CustomUserSerializer',
+        'user': 'api.serializers.UserSerializer',
+        'current_user': 'api.serializers.UserSerializer',
     },
 }

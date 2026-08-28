@@ -48,6 +48,6 @@ Foodgram — это веб-приложение, которое позволяе
 - Домен (опционально, для продакшена)
 
 ### чтобы запустить проект:
-1 сделать миграции manage.py makemigrations\python manage.py migrate
+1 сделать миграции python manage.py makemigrations\python manage.py migrate
 2 выполнить команду для заполнения бд. python manage.py shell < fill_database.py
 3 запустить проект python manage.py runserver
