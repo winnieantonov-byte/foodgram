@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.db import transaction
 from djoser.serializers import UserSerializer as DjoserUserSerializer
 from rest_framework import serializers
 
@@ -227,6 +228,7 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
             ) for item in ingredients_data
         ])
 
+    @transaction.atomic
     def create(self, validated_data):
         """Создает новый рецепт."""
         ingredients_data = validated_data.pop('ingredients')
@@ -240,6 +242,7 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
 
         return recipe
 
+    @transaction.atomic
     def update(self, instance, validated_data):
         """Обновляет существующий рецепт."""
         ingredients_data = validated_data.pop('ingredients', None)

@@ -1,7 +1,20 @@
 import os
 import subprocess
 import sys
+from django.contrib.auth import get_user_model
+from apps.recipes.models import (
+    Favorite,
+    Ingredient,
+    Recipe,
+    RecipeIngredient,
+    ShoppingCart,
+    Tag,
+)
+from apps.users.models import Subscription
+from django.core.files.base import ContentFile
+import base64
 
+User = get_user_model()
 # ============================================================
 # УДАЛЕНИЕ БАЗЫ ДАННЫХ И ВЫПОЛНЕНИЕ МИГРАЦИЙ
 # ============================================================
@@ -20,21 +33,6 @@ print("✅ Миграции выполнены")
 # ============================================================
 # СОЗДАНИЕ ТЕСТОВЫХ ДАННЫХ
 # ============================================================
-
-from django.contrib.auth import get_user_model
-from apps.recipes.models import (
-    Favorite,
-    Ingredient,
-    Recipe,
-    RecipeIngredient,
-    ShoppingCart,
-    Tag,
-)
-from apps.users.models import Subscription
-from django.core.files.base import ContentFile
-import base64
-
-User = get_user_model()
 
 
 def create_users():
@@ -94,9 +92,13 @@ def create_users():
         if created:
             user.set_password(user_data['password'])
             user.save()
-            print(f"  ✅ Создан пользователь: {user.username} (ID: {user.id})")
+            print(
+                f"  ✅ Создан пользователь: {user.username} (ID: {user.id})"
+            )
         else:
-            print(f"  ℹ️ Пользователь уже существует: {user.username} (ID: {user.id})")
+            print(
+                f"  ℹ️ Пользователь уже сущ.: {user.username} (ID: {user.id})"
+            )
         users[user.username] = user
 
     return users
@@ -128,9 +130,13 @@ def create_tags():
             defaults={'name': tag_data['name']}
         )
         if created:
-            print(f"  ✅ Создан тег: {tag.name} (slug: {tag.slug}, ID: {tag.id})")
+            print(
+                f"  ✅ Создан тег: {tag.name} (slug: {tag.slug}, ID: {tag.id})"
+            )
         else:
-            print(f"  ℹ️ Тег уже существует: {tag.name} (slug: {tag.slug}, ID: {tag.id})")
+            print(
+                f"  ℹ️ Тег уже сущ. : {tag.name}(slug:{tag.slug},ID:{tag.id})"
+            )
         tags[tag.slug] = tag
 
     return tags
