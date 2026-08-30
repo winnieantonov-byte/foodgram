@@ -1,7 +1,13 @@
+import base64
+import json
 import os
 import subprocess
 import sys
+from pathlib import Path
+
 from django.contrib.auth import get_user_model
+from django.core.files.base import ContentFile
+
 from apps.recipes.models import (
     Favorite,
     Ingredient,
@@ -11,28 +17,61 @@ from apps.recipes.models import (
     Tag,
 )
 from apps.users.models import Subscription
-from django.core.files.base import ContentFile
-import base64
 
 User = get_user_model()
+
 # ============================================================
 # УДАЛЕНИЕ БАЗЫ ДАННЫХ И ВЫПОЛНЕНИЕ МИГРАЦИЙ
 # ============================================================
 
-# Удаляем файл базы данных (если есть)
 if os.path.exists('db.sqlite3'):
     os.remove('db.sqlite3')
     print("🗑️  База данных удалена")
 
-# Выполняем миграции
 print("🔄 Выполняем миграции...")
 subprocess.run([sys.executable, 'manage.py', 'makemigrations'], check=True)
 subprocess.run([sys.executable, 'manage.py', 'migrate'], check=True)
 print("✅ Миграции выполнены")
 
 # ============================================================
-# СОЗДАНИЕ ТЕСТОВЫХ ДАННЫХ
+# ЗАГРУЗКА ИНГРЕДИЕНТОВ ИЗ JSON
 # ============================================================
+
+DATA_DIR = Path('/mnt/c/Users/astaf/code/foodgram/backend/data')
+INGREDIENTS_FILE = DATA_DIR / 'ingredients.json'
+
+
+def load_ingredients_from_json():
+    """Загружает ингредиенты из JSON файла."""
+    print("\n" + "=" * 60)
+    print("3. ЗАГРУЗКА ИНГРЕДИЕНТОВ ИЗ JSON")
+    print("=" * 60)
+
+    if not INGREDIENTS_FILE.exists():
+        print(f"  ❌ Файл не найден: {INGREDIENTS_FILE}")
+        return {}
+
+    with open(INGREDIENTS_FILE, 'r', encoding='utf-8') as f:
+        data = json.load(f)
+
+    ingredients = {}
+    for item in data:
+        if isinstance(item, dict):
+            name = item.get('name', '').strip()
+            unit = item.get('measurement_unit', '').strip()
+            if name and unit:
+                ingredient, created = Ingredient.objects.get_or_create(
+                    name=name,
+                    defaults={'measurement_unit': unit}
+                )
+                if not created:
+                    ingredient.measurement_unit = unit
+                    ingredient.save()
+                ingredients[ingredient.name] = ingredient
+                print(f"  ✅ Загружен ингредиент: {ingredient.name} ({ingredient.measurement_unit})")
+
+    print(f"  📊 Всего ингредиентов из JSON: {len(ingredients)}")
+    return ingredients
 
 
 def create_users():
@@ -142,87 +181,6 @@ def create_tags():
     return tags
 
 
-def create_ingredients():
-    """Создает ингредиенты."""
-    print("\n" + "=" * 60)
-    print("3. СОЗДАНИЕ ИНГРЕДИЕНТОВ")
-    print("=" * 60)
-
-    ingredients_data = [
-        {'name': 'Мука', 'measurement_unit': 'г'},
-        {'name': 'Сахар', 'measurement_unit': 'г'},
-        {'name': 'Соль', 'measurement_unit': 'г'},
-        {'name': 'Масло растительное', 'measurement_unit': 'мл'},
-        {'name': 'Молоко', 'measurement_unit': 'мл'},
-        {'name': 'Яйцо', 'measurement_unit': 'шт'},
-        {'name': 'Вода', 'measurement_unit': 'мл'},
-        {'name': 'Сливочное масло', 'measurement_unit': 'г'},
-        {'name': 'Чеснок', 'measurement_unit': 'зубчик'},
-        {'name': 'Лук', 'measurement_unit': 'шт'},
-        {'name': 'Морковь', 'measurement_unit': 'шт'},
-        {'name': 'Картофель', 'measurement_unit': 'шт'},
-        {'name': 'Помидоры', 'measurement_unit': 'шт'},
-        {'name': 'Огурцы', 'measurement_unit': 'шт'},
-        {'name': 'Курица', 'measurement_unit': 'г'},
-        {'name': 'Говядина', 'measurement_unit': 'г'},
-        {'name': 'Свинина', 'measurement_unit': 'г'},
-        {'name': 'Рыба', 'measurement_unit': 'г'},
-        {'name': 'Творог', 'measurement_unit': 'г'},
-        {'name': 'Сметана', 'measurement_unit': 'г'},
-        {'name': 'Майонез', 'measurement_unit': 'г'},
-        {'name': 'Кетчуп', 'measurement_unit': 'г'},
-        {'name': 'Горчица', 'measurement_unit': 'г'},
-        {'name': 'Уксус', 'measurement_unit': 'мл'},
-        {'name': 'Соевый соус', 'measurement_unit': 'мл'},
-        {'name': 'Мед', 'measurement_unit': 'г'},
-        {'name': 'Ванилин', 'measurement_unit': 'г'},
-        {'name': 'Корица', 'measurement_unit': 'г'},
-        {'name': 'Какао-порошок', 'measurement_unit': 'г'},
-        {'name': 'Разрыхлитель', 'measurement_unit': 'г'},
-        {'name': 'Сода', 'measurement_unit': 'г'},
-        {'name': 'Дрожжи', 'measurement_unit': 'г'},
-        {'name': 'Сыр', 'measurement_unit': 'г'},
-        {'name': 'Колбаса', 'measurement_unit': 'г'},
-        {'name': 'Горошек', 'measurement_unit': 'г'},
-        {'name': 'Кукуруза', 'measurement_unit': 'г'},
-        {'name': 'Оливки', 'measurement_unit': 'г'},
-        {'name': 'Зелень', 'measurement_unit': 'г'},
-        {'name': 'Лимон', 'measurement_unit': 'шт'},
-        {'name': 'Банан', 'measurement_unit': 'шт'},
-        {'name': 'Яблоко', 'measurement_unit': 'шт'},
-        {'name': 'Груша', 'measurement_unit': 'шт'},
-        {'name': 'Апельсин', 'measurement_unit': 'шт'},
-        {'name': 'Клубника', 'measurement_unit': 'г'},
-        {'name': 'Малина', 'measurement_unit': 'г'},
-        {'name': 'Черника', 'measurement_unit': 'г'},
-        {'name': 'Орехи', 'measurement_unit': 'г'},
-        {'name': 'Изюм', 'measurement_unit': 'г'},
-        {'name': 'Шоколад', 'measurement_unit': 'г'},
-        {'name': 'Печенье', 'measurement_unit': 'г'},
-        {'name': 'Свекла', 'measurement_unit': 'шт'},
-        {'name': 'Сливки', 'measurement_unit': 'мл'},
-        {'name': 'Салат', 'measurement_unit': 'шт'},
-        {'name': 'Йогурт', 'measurement_unit': 'г'},
-        {'name': 'Мясо', 'measurement_unit': 'г'},
-        {'name': 'Овсянка', 'measurement_unit': 'г'},
-        {'name': 'Рис', 'measurement_unit': 'г'},
-    ]
-
-    ingredients = {}
-    for ing_data in ingredients_data:
-        ingredient, created = Ingredient.objects.get_or_create(
-            name=ing_data['name'],
-            defaults={'measurement_unit': ing_data['measurement_unit']}
-        )
-        if not created:
-            ingredient.measurement_unit = ing_data['measurement_unit']
-            ingredient.save()
-        ingredients[ingredient.name] = ingredient
-
-    print(f"  📊 Всего ингредиентов: {Ingredient.objects.count()}")
-    return ingredients
-
-
 def create_recipes(users, tags, ingredients):
     """Создает рецепты."""
     print("\n" + "=" * 60)
@@ -248,12 +206,12 @@ def create_recipes(users, tags, ingredients):
             'cooking_time': 30,
             'tags': ['breakfast', 'baking'],
             'ingredients': [
-                {'name': 'Мука', 'amount': 200},
-                {'name': 'Сахар', 'amount': 50},
-                {'name': 'Молоко', 'amount': 500},
-                {'name': 'Яйцо', 'amount': 3},
-                {'name': 'Соль', 'amount': 5},
-                {'name': 'Масло растительное', 'amount': 30},
+                {'name': 'мука', 'amount': 200},
+                {'name': 'сахар', 'amount': 50},
+                {'name': 'молоко', 'amount': 500},
+                {'name': 'яйца куриные', 'amount': 3},
+                {'name': 'соль', 'amount': 5},
+                {'name': 'растительное масло', 'amount': 30},
             ]
         },
         {
@@ -266,14 +224,14 @@ def create_recipes(users, tags, ingredients):
             'cooking_time': 45,
             'tags': ['salads', 'snacks'],
             'ingredients': [
-                {'name': 'Картофель', 'amount': 4},
-                {'name': 'Морковь', 'amount': 2},
-                {'name': 'Яйцо', 'amount': 4},
-                {'name': 'Огурцы', 'amount': 3},
-                {'name': 'Колбаса', 'amount': 300},
-                {'name': 'Горошек', 'amount': 100},
-                {'name': 'Майонез', 'amount': 200},
-                {'name': 'Соль', 'amount': 5},
+                {'name': 'картофель', 'amount': 4},
+                {'name': 'морковь', 'amount': 2},
+                {'name': 'яйца куриные', 'amount': 4},
+                {'name': 'огурцы', 'amount': 3},
+                {'name': 'колбаса', 'amount': 300},
+                {'name': 'горошек зеленый', 'amount': 100},
+                {'name': 'майонез', 'amount': 200},
+                {'name': 'соль', 'amount': 5},
             ]
         },
         {
@@ -286,13 +244,13 @@ def create_recipes(users, tags, ingredients):
             'cooking_time': 120,
             'tags': ['dessert', 'baking'],
             'ingredients': [
-                {'name': 'Мука', 'amount': 200},
-                {'name': 'Сахар', 'amount': 200},
-                {'name': 'Яйцо', 'amount': 4},
-                {'name': 'Какао-порошок', 'amount': 50},
-                {'name': 'Сливочное масло', 'amount': 200},
-                {'name': 'Молоко', 'amount': 100},
-                {'name': 'Разрыхлитель', 'amount': 10},
+                {'name': 'мука', 'amount': 200},
+                {'name': 'сахар', 'amount': 200},
+                {'name': 'яйца куриные', 'amount': 4},
+                {'name': 'какао-порошок', 'amount': 50},
+                {'name': 'сливочное масло', 'amount': 200},
+                {'name': 'молоко', 'amount': 100},
+                {'name': 'разрыхлитель', 'amount': 10},
             ]
         },
         {
@@ -305,11 +263,11 @@ def create_recipes(users, tags, ingredients):
             'cooking_time': 15,
             'tags': ['salads', 'vegan'],
             'ingredients': [
-                {'name': 'Помидоры', 'amount': 2},
-                {'name': 'Огурцы', 'amount': 2},
-                {'name': 'Масло растительное', 'amount': 2},
-                {'name': 'Соль', 'amount': 3},
-                {'name': 'Зелень', 'amount': 20},
+                {'name': 'помидоры', 'amount': 2},
+                {'name': 'огурцы', 'amount': 2},
+                {'name': 'растительное масло', 'amount': 2},
+                {'name': 'соль', 'amount': 3},
+                {'name': 'зелень', 'amount': 20},
             ]
         },
         {
@@ -322,13 +280,13 @@ def create_recipes(users, tags, ingredients):
             'cooking_time': 60,
             'tags': ['soups', 'dinner'],
             'ingredients': [
-                {'name': 'Курица', 'amount': 400},
-                {'name': 'Лук', 'amount': 1},
-                {'name': 'Морковь', 'amount': 1},
-                {'name': 'Картофель', 'amount': 2},
-                {'name': 'Вода', 'amount': 2000},
-                {'name': 'Соль', 'amount': 8},
-                {'name': 'Зелень', 'amount': 20},
+                {'name': 'курица', 'amount': 400},
+                {'name': 'лук репчатый', 'amount': 1},
+                {'name': 'морковь', 'amount': 1},
+                {'name': 'картофель', 'amount': 2},
+                {'name': 'вода', 'amount': 2000},
+                {'name': 'соль', 'amount': 8},
+                {'name': 'зелень', 'amount': 20},
             ]
         },
         {
@@ -338,13 +296,13 @@ def create_recipes(users, tags, ingredients):
             'cooking_time': 90,
             'tags': ['lunch', 'dinner'],
             'ingredients': [
-                {'name': 'Рис', 'amount': 300},
-                {'name': 'Мясо', 'amount': 500},
-                {'name': 'Лук', 'amount': 2},
-                {'name': 'Морковь', 'amount': 2},
-                {'name': 'Масло растительное', 'amount': 100},
-                {'name': 'Соль', 'amount': 10},
-                {'name': 'Вода', 'amount': 500},
+                {'name': 'рис', 'amount': 300},
+                {'name': 'мясо', 'amount': 500},
+                {'name': 'лук репчатый', 'amount': 2},
+                {'name': 'морковь', 'amount': 2},
+                {'name': 'растительное масло', 'amount': 100},
+                {'name': 'соль', 'amount': 10},
+                {'name': 'вода', 'amount': 500},
             ]
         },
         {
@@ -357,14 +315,14 @@ def create_recipes(users, tags, ingredients):
             'cooking_time': 90,
             'tags': ['soups', 'dinner'],
             'ingredients': [
-                {'name': 'Говядина', 'amount': 500},
-                {'name': 'Картофель', 'amount': 3},
-                {'name': 'Лук', 'amount': 1},
-                {'name': 'Морковь', 'amount': 1},
-                {'name': 'Свекла', 'amount': 2},
-                {'name': 'Чеснок', 'amount': 3},
-                {'name': 'Соль', 'amount': 10},
-                {'name': 'Сметана', 'amount': 100},
+                {'name': 'говядина', 'amount': 500},
+                {'name': 'картофель', 'amount': 3},
+                {'name': 'лук репчатый', 'amount': 1},
+                {'name': 'морковь', 'amount': 1},
+                {'name': 'свекла', 'amount': 2},
+                {'name': 'чеснок', 'amount': 3},
+                {'name': 'соль', 'amount': 10},
+                {'name': 'сметана', 'amount': 100},
             ]
         },
         {
@@ -377,11 +335,11 @@ def create_recipes(users, tags, ingredients):
             'cooking_time': 20,
             'tags': ['breakfast'],
             'ingredients': [
-                {'name': 'Яйцо', 'amount': 3},
-                {'name': 'Молоко', 'amount': 100},
-                {'name': 'Масло растительное', 'amount': 20},
-                {'name': 'Соль', 'amount': 3},
-                {'name': 'Помидоры', 'amount': 1},
+                {'name': 'яйца куриные', 'amount': 3},
+                {'name': 'молоко', 'amount': 100},
+                {'name': 'растительное масло', 'amount': 20},
+                {'name': 'соль', 'amount': 3},
+                {'name': 'помидоры', 'amount': 1},
             ]
         },
         {
@@ -393,12 +351,12 @@ def create_recipes(users, tags, ingredients):
             'cooking_time': 15,
             'tags': ['salads', 'vegan'],
             'ingredients': [
-                {'name': 'Помидоры', 'amount': 3},
-                {'name': 'Огурцы', 'amount': 2},
-                {'name': 'Оливки', 'amount': 50},
-                {'name': 'Сыр', 'amount': 100},
-                {'name': 'Масло растительное', 'amount': 30},
-                {'name': 'Соль', 'amount': 3},
+                {'name': 'помидоры', 'amount': 3},
+                {'name': 'огурцы', 'amount': 2},
+                {'name': 'оливки', 'amount': 50},
+                {'name': 'сыр', 'amount': 100},
+                {'name': 'растительное масло', 'amount': 30},
+                {'name': 'соль', 'amount': 3},
             ]
         },
         {
@@ -408,11 +366,11 @@ def create_recipes(users, tags, ingredients):
             'cooking_time': 50,
             'tags': ['breakfast', 'dessert'],
             'ingredients': [
-                {'name': 'Творог', 'amount': 500},
-                {'name': 'Яйцо', 'amount': 3},
-                {'name': 'Сахар', 'amount': 100},
-                {'name': 'Сметана', 'amount': 100},
-                {'name': 'Ванилин', 'amount': 5},
+                {'name': 'творог', 'amount': 500},
+                {'name': 'яйца куриные', 'amount': 3},
+                {'name': 'сахар', 'amount': 100},
+                {'name': 'сметана', 'amount': 100},
+                {'name': 'ванилин', 'amount': 5},
             ]
         },
         {
@@ -424,11 +382,11 @@ def create_recipes(users, tags, ingredients):
             'cooking_time': 25,
             'tags': ['dinner', 'vegan'],
             'ingredients': [
-                {'name': 'Помидоры', 'amount': 2},
-                {'name': 'Масло растительное', 'amount': 30},
-                {'name': 'Чеснок', 'amount': 2},
-                {'name': 'Соль', 'amount': 5},
-                {'name': 'Зелень', 'amount': 20},
+                {'name': 'помидоры', 'amount': 2},
+                {'name': 'растительное масло', 'amount': 30},
+                {'name': 'чеснок', 'amount': 2},
+                {'name': 'соль', 'amount': 5},
+                {'name': 'зелень', 'amount': 20},
             ]
         },
         {
@@ -440,12 +398,12 @@ def create_recipes(users, tags, ingredients):
             'cooking_time': 30,
             'tags': ['salads', 'lunch'],
             'ingredients': [
-                {'name': 'Курица', 'amount': 300},
-                {'name': 'Салат', 'amount': 200},
-                {'name': 'Сыр', 'amount': 50},
-                {'name': 'Майонез', 'amount': 100},
-                {'name': 'Чеснок', 'amount': 1},
-                {'name': 'Лимон', 'amount': 1},
+                {'name': 'курица', 'amount': 300},
+                {'name': 'салат', 'amount': 200},
+                {'name': 'сыр', 'amount': 50},
+                {'name': 'майонез', 'amount': 100},
+                {'name': 'чеснок', 'amount': 1},
+                {'name': 'лимоны', 'amount': 1},
             ]
         },
         {
@@ -457,11 +415,11 @@ def create_recipes(users, tags, ingredients):
             'cooking_time': 15,
             'tags': ['breakfast', 'vegan'],
             'ingredients': [
-                {'name': 'Овсянка', 'amount': 100},
-                {'name': 'Молоко', 'amount': 200},
-                {'name': 'Банан', 'amount': 1},
-                {'name': 'Яблоко', 'amount': 1},
-                {'name': 'Мед', 'amount': 20},
+                {'name': 'овсяные хлопья', 'amount': 100},
+                {'name': 'молоко', 'amount': 200},
+                {'name': 'бананы', 'amount': 1},
+                {'name': 'яблоки', 'amount': 1},
+                {'name': 'мед', 'amount': 20},
             ]
         },
         {
@@ -473,12 +431,12 @@ def create_recipes(users, tags, ingredients):
             'cooking_time': 40,
             'tags': ['lunch', 'dinner'],
             'ingredients': [
-                {'name': 'Курица', 'amount': 300},
-                {'name': 'Сливки', 'amount': 200},
-                {'name': 'Масло растительное', 'amount': 30},
-                {'name': 'Чеснок', 'amount': 2},
-                {'name': 'Соль', 'amount': 5},
-                {'name': 'Сыр', 'amount': 50},
+                {'name': 'курица', 'amount': 300},
+                {'name': 'сливки', 'amount': 200},
+                {'name': 'растительное масло', 'amount': 30},
+                {'name': 'чеснок', 'amount': 2},
+                {'name': 'соль', 'amount': 5},
+                {'name': 'сыр', 'amount': 50},
             ]
         },
         {
@@ -488,12 +446,12 @@ def create_recipes(users, tags, ingredients):
             'cooking_time': 10,
             'tags': ['dessert', 'vegan'],
             'ingredients': [
-                {'name': 'Яблоко', 'amount': 2},
-                {'name': 'Банан', 'amount': 2},
-                {'name': 'Апельсин', 'amount': 1},
-                {'name': 'Клубника', 'amount': 100},
-                {'name': 'Йогурт', 'amount': 100},
-                {'name': 'Мед', 'amount': 20},
+                {'name': 'яблоки', 'amount': 2},
+                {'name': 'бананы', 'amount': 2},
+                {'name': 'апельсины', 'amount': 1},
+                {'name': 'клубника', 'amount': 100},
+                {'name': 'йогурт', 'amount': 100},
+                {'name': 'мед', 'amount': 20},
             ]
         },
         {
@@ -503,13 +461,13 @@ def create_recipes(users, tags, ingredients):
             'cooking_time': 50,
             'tags': ['soups', 'dinner'],
             'ingredients': [
-                {'name': 'Рыба', 'amount': 500},
-                {'name': 'Картофель', 'amount': 3},
-                {'name': 'Лук', 'amount': 1},
-                {'name': 'Морковь', 'amount': 1},
-                {'name': 'Вода', 'amount': 2000},
-                {'name': 'Соль', 'amount': 8},
-                {'name': 'Зелень', 'amount': 20},
+                {'name': 'рыба', 'amount': 500},
+                {'name': 'картофель', 'amount': 3},
+                {'name': 'лук репчатый', 'amount': 1},
+                {'name': 'морковь', 'amount': 1},
+                {'name': 'вода', 'amount': 2000},
+                {'name': 'соль', 'amount': 8},
+                {'name': 'зелень', 'amount': 20},
             ]
         },
     ]
@@ -661,7 +619,7 @@ def main():
 
     users = create_users()
     tags = create_tags()
-    ingredients = create_ingredients()
+    ingredients = load_ingredients_from_json()
     recipes = create_recipes(users, tags, ingredients)
     create_subscriptions(users)
     create_favorites(users, recipes)

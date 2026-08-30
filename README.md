@@ -19,13 +19,6 @@ Foodgram — это веб-приложение, которое позволяе
 
 ### Бэкенд:
 - **Python 3.12**
-- **Django 4.2**
-- **Django REST Framework 3.14**
-- **Djoser** - аутентификация и управление пользователями
-- **django-filter** - фильтрация и поиск
-- **Pillow** - обработка изображений
-- **Gunicorn** - WSGI-сервер для продакшена
-- **PostgreSQL** - база данных (в продакшене)
 
 ### Фронтенд:
 - **React**
@@ -47,7 +40,32 @@ Foodgram — это веб-приложение, которое позволяе
 - Сервер с доступом в интернет
 - Домен (опционально, для продакшена)
 
-### чтобы запустить проект:
-1 сделать миграции python manage.py makemigrations\python manage.py migrate
-2 выполнить команду для заполнения бд. python manage.py shell < fill_database.py
-3 запустить проект python manage.py runserver
+### чтобы запустить backend:
+1 сделать миграции 
+python manage.py makemigrations
+python manage.py migrate
+2 выполнить команду для заполнения бд. P.S теперь инградиенты берутся из data как и надо было 
+python manage.py shell < fill_database.py
+3 запустить проект 
+python manage.py runserver
+
+### Чтобы запустить проект целиком (Бэкенд, Фронтенд, Nginx):
+
+1. **Склонируйте репозиторий** на сервер и перейдите в корень проекта.
+   ```bash
+    git clone https://github.com/winnieantonov-byte/foodgram.git
+    cd foodgram
+    ```
+2. **Создайте файл конфигурации окружения** `.env` в корневой директории и заполните его необходимыми переменными.
+3. **Запустите сборку и контейнеры** в фоновом режиме:
+   ```bash
+   docker compose up -d --build
+   ```
+4. **Выполните миграции базы данных** (если это бэкенд на Django):
+   ```bash
+   docker compose exec backend python manage.py migrate
+   ```
+5. **Заполните бд**:
+   ```bash
+    python manage.py shell < fill_database.py
+   ```

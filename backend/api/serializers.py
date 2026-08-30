@@ -26,10 +26,9 @@ class UserSerializer(DjoserUserSerializer):
     def get_is_subscribed(self, obj):
         """Проверяет, подписан ли текущий пользователь на автора."""
         request = self.context.get('request')
-        if not request or not hasattr(request, 'user'):
-            return False
         return bool(
-            request.user.is_authenticated
+            request
+            and request.user.is_authenticated
             and Subscription.objects.filter(
                 user=request.user, author=obj
             ).exists()
@@ -146,19 +145,17 @@ class RecipeReadSerializer(serializers.ModelSerializer):
     def get_is_favorited(self, obj):
         """Проверяет, добавлен ли рецепт в избранное."""
         request = self.context.get('request')
-        if not request or not hasattr(request, 'user'):
-            return False
         return bool(
-            request.user.is_authenticated
+            request
+            and request.user.is_authenticated
             and obj.favorite.filter(user=request.user).exists()
         )
 
     def get_is_in_shopping_cart(self, obj):
         """Проверяет, добавлен ли рецепт в корзину."""
         request = self.context.get('request')
-        if not request or not hasattr(request, 'user'):
-            return False
         return bool(
+            request
             request.user.is_authenticated
             and obj.shopping_cart.filter(user=request.user).exists()
         )
