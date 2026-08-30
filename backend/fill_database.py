@@ -68,7 +68,6 @@ def load_ingredients_from_json():
                     ingredient.measurement_unit = unit
                     ingredient.save()
                 ingredients[ingredient.name] = ingredient
-                print(f"  ✅ Загружен ингредиент: {ingredient.name} ({ingredient.measurement_unit})")
 
     print(f"  📊 Всего ингредиентов из JSON: {len(ingredients)}")
     return ingredients
