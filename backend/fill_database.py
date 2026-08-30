@@ -37,7 +37,11 @@ print("✅ Миграции выполнены")
 # ЗАГРУЗКА ИНГРЕДИЕНТОВ ИЗ JSON
 # ============================================================
 
-DATA_DIR = Path('./foodgram/backend/data')
+# Получаем корневую директорию проекта
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Путь к данным
+DATA_DIR = BASE_DIR / 'data'
 INGREDIENTS_FILE = DATA_DIR / 'ingredients.json'
 
 
