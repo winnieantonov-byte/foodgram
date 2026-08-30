@@ -37,7 +37,7 @@ print("✅ Миграции выполнены")
 # ЗАГРУЗКА ИНГРЕДИЕНТОВ ИЗ JSON
 # ============================================================
 
-DATA_DIR = Path('/mnt/c/Users/astaf/code/foodgram/backend/data')
+DATA_DIR = Path('./data')
 INGREDIENTS_FILE = DATA_DIR / 'ingredients.json'
 
 
@@ -55,19 +55,29 @@ def load_ingredients_from_json():
         data = json.load(f)
 
     ingredients = {}
+    ingredients_to_create = []
+
     for item in data:
         if isinstance(item, dict):
             name = item.get('name', '').strip()
             unit = item.get('measurement_unit', '').strip()
             if name and unit:
-                ingredient, created = Ingredient.objects.get_or_create(
-                    name=name,
-                    defaults={'measurement_unit': unit}
+                ingredients_to_create.append(
+                    Ingredient(name=name, measurement_unit=unit)
                 )
-                if not created:
-                    ingredient.measurement_unit = unit
-                    ingredient.save()
-                ingredients[ingredient.name] = ingredient
+
+    # Создаем все ингредиенты одним запросом в БД
+    Ingredient.objects.bulk_create(
+        ingredients_to_create,
+        ignore_conflicts=True,
+        batch_size=1000,
+    )
+
+    # Собираем словарь для дальнейшего использования
+    for ing in Ingredient.objects.filter(
+        name__in=[ing.name for ing in ingredients_to_create]
+    ):
+        ingredients[ing.name] = ing
 
     print(f"  📊 Всего ингредиентов из JSON: {len(ingredients)}")
     return ingredients
