@@ -5,6 +5,7 @@ import subprocess
 import sys
 from pathlib import Path
 
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.files.base import ContentFile
 
@@ -37,11 +38,7 @@ print("✅ Миграции выполнены")
 # ЗАГРУЗКА ИНГРЕДИЕНТОВ ИЗ JSON
 # ============================================================
 
-# Получаем корневую директорию проекта
-BASE_DIR = Path(__file__).resolve().parent.parent
-
-# Путь к данным
-DATA_DIR = BASE_DIR / 'data'
+DATA_DIR = settings.BASE_DIR / 'data'
 INGREDIENTS_FILE = DATA_DIR / 'ingredients.json'
 
 
