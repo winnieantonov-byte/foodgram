@@ -37,7 +37,7 @@ print("✅ Миграции выполнены")
 # ЗАГРУЗКА ИНГРЕДИЕНТОВ ИЗ JSON
 # ============================================================
 
-DATA_DIR = Path('./data')
+DATA_DIR = Path('./backend/data')
 INGREDIENTS_FILE = DATA_DIR / 'ingredients.json'
 
 
